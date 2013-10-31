@@ -17,6 +17,12 @@ class Point {
 		this.y = y;
 	}
 
+	public double dist(Point p) {
+		double dx = x - p.x;
+		double dy = y - p.y;
+		return Math.sqrt(dx * dx + dy * dy);
+	}
+
 	public Point(Point p) {
 		this(p.x, p.y);
 	}
@@ -30,8 +36,9 @@ class Point {
 		y -= p.y;
 	}
 
-	// public Point moved(double x0, double y0) { return new Point(x+x0, y+y0);
-	// }
+	public double dot(Point p) {
+		return x * p.x + y * p.y;
+	}
 
 	public Point reversed() {
 		return new Point(-x, -y);
