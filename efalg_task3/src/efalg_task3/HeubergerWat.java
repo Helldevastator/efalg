@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 
-public class Heuberger {
-
+public class HeubergerWat {
+	static double pi2 = Math.PI * 2;
 	static Point center;
 	static ArrayList<Point> sortedPoints; // only one of the lines pair
 
@@ -18,27 +18,47 @@ public class Heuberger {
 
 		center = new Point(in.nextInt(), in.nextInt());
 		int size = in.nextInt();
-		sortedPoints = new ArrayList<>(size + 1);
+		sortedPoints = new ArrayList<>(size);
 
-		sortedPoints.add(center);
 		for (int i = 0; i < size; i += 2) {
 			Point p1 = new Point(in.nextInt(), in.nextInt());
 			Point p2 = new Point(in.nextInt(), in.nextInt());
 			Line l;
-			if (p1.x < p2.x) {
-				sortedPoints.add(p1);
-				l = new Line(p1, p2);
-			} else {
-				sortedPoints.add(p2);
-				l = new Line(p2, p1);
-			}
-			l.setObstacle();
+			sortedPoints.add(p1);
+			l = new Line(p1, p2);
+			// l.setObstacle();
 		}
 
 		Collections.sort(sortedPoints);
 	}
 
 	public static void main(String[] args) throws Exception {
+		center = new Point(0, 0);
+
+		ArrayList<Point> bäm = new ArrayList<>();
+
+		Point p1 = new Point(0, 3);
+		Point p2 = new Point(0, 4);
+
+		bäm.add(new Point(-3, 2));
+		bäm.add(p2);
+		bäm.add(p1);
+		bäm.add(new Point(-3, -2));
+		bäm.add(new Point(3, 1));
+		bäm.add(new Point(3, 2));
+		// bäm.add(new Point(3, -4));
+
+		/*
+		 * 
+		 */
+
+		Collections.sort(bäm);
+
+		for (Point p : bäm) {
+			System.out.println(p.x + " " + p.y);
+		}
+		// System.out.println(p1.compareTo(p2));
+		// System.out.println(Integer.compare(0, 1));
 		read();
 
 		HashSet<Line> visible = new HashSet<>();
@@ -54,9 +74,10 @@ public class Heuberger {
 		PrintWriter out = new PrintWriter("heuberger.out");
 		out.close();
 
-		Line s1 = new Line(new Point(1, 1), new Point(3, 3));
-		Line t1 = new Line(new Point(1, 1), new Point(3, 3));
-		int bla1 = s1.intersects(t1);
+	}
+
+	public static void check() {
+
 	}
 
 	public static void checkHalf(HashSet<Line> visible, boolean startLow) {
@@ -111,9 +132,36 @@ public class Heuberger {
 			this.y = y;
 		}
 
+		public int cross(Point p) {
+			return x * p.y - p.x * y;
+		}
+
+		public int mDist() {
+			return Math.abs(x) + Math.abs(y);
+		}
+
 		@Override
 		public int compareTo(Point o) {
-			return Integer.compare(x, o.x);
+			Point v1 = new Point(o.x - center.x, o.y - center.y);
+			Point v2 = new Point(x - center.x, y - center.y);
+
+			double alpha = Math.atan2(v1.cross(v2), v1.x * v2.x + v1.y * v2.y);
+
+			if (alpha < 0.0)
+				return -1;
+			else if (alpha > 0.0)
+				return 1;
+			else {
+				int mDist1 = v1.mDist();
+				int mDist2 = v2.mDist();
+
+				if (mDist1 == mDist2)
+					return 0;
+				else
+					return mDist1 < mDist2 ? 1 : -1;
+			}
+
+			// return Integer.compare(x, o.x);
 		}
 	}
 
