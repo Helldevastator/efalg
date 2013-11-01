@@ -3,8 +3,8 @@ package ch.fhnw.efalg.schwammberger.jonas.uebung4;
 import java.awt.Point;
 
 public class Line {
-	private final Point p;
-	private final Vector v;
+	private Point p;
+	private Vector v;
 
 	public Line(Point p, Vector v) {
 		this.p = p;
@@ -32,10 +32,20 @@ public class Line {
 		return v.getAngle(rp1);
 	}
 
-	public void turnLine(Point p1) {
-
+	/**
+	 * Turns line so it goes through the point p
+	 * 
+	 * @param p
+	 */
+	public void turnLine(Point p) {
+		this.v = new Vector(this.p, p);
+		this.p = (Point) p.clone();
 	}
 
+	/**
+	 * 
+	 * @param angle
+	 */
 	public void turnLine(double angle) {
 
 	}

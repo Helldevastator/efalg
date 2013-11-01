@@ -15,21 +15,14 @@ public class SmallestRectangle {
 	public Line[] calculateSmallestRectangle() {
 		Line[] minRectangle = new Line[4];
 		Line[] currentRectangle = new Line[4];
-		int[] hullIndices = { 0, this.findMin(true), this.findMax(true),
-				this.findMax(false) };
+		int[] hullIndices = { 0, this.findMin(true), this.findMax(true), this.findMax(false) };
 		double minArea;
 		double totalAngle = 0;
 
-		minRectangle[0] = new Line(convexHull.get(hullIndices[0]), new Vector(
-				1, 0)); // lower
-		// horizontal
-		// line
-		minRectangle[1] = new Line(convexHull.get(hullIndices[1]), new Vector(
-				0, 1)); // left vertical line
-		minRectangle[2] = new Line(convexHull.get(hullIndices[2]), new Vector(
-				0, 1)); // right vertical line
-		minRectangle[3] = new Line(convexHull.get(hullIndices[3]), new Vector(
-				1, 0)); // top horizontal line
+		minRectangle[0] = new Line(convexHull.get(hullIndices[0]), new Vector(1, 0)); // lower horizontal line
+		minRectangle[1] = new Line(convexHull.get(hullIndices[1]), new Vector(0, 1)); // left vertical line
+		minRectangle[2] = new Line(convexHull.get(hullIndices[2]), new Vector(0, 1)); // right vertical line
+		minRectangle[3] = new Line(convexHull.get(hullIndices[3]), new Vector(1, 0)); // top horizontal line
 
 		minArea = Line.calculateRectangleArea(minRectangle);
 
@@ -43,17 +36,15 @@ public class SmallestRectangle {
 			double smallestAngle = Double.MAX_VALUE;
 			int index = 0;
 			for (int i = 0; i < 4; i++) {
-				double currentAngle = currentRectangle[i]
-						.calculateAngle(convexHull.get(hullIndices[i] - 1));
-				if (smallestAngle > currentAngle) {
+				double currentAngle = currentRectangle[i].calculateAngle(convexHull.get(hullIndices[i] - 1));
+				if (Math.abs(smallestAngle) > Math.abs(currentAngle)) {
 					smallestAngle = currentAngle;
 					index = i;
 				}
 			}
 
 			// turn smallest line
-			currentRectangle[index]
-					.turnLine(convexHull.get(hullIndices[index]));
+			currentRectangle[index].turnLine(convexHull.get(hullIndices[index]));
 			hullIndices[index]--;
 
 			// turn other lines
