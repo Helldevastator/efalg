@@ -6,6 +6,11 @@ public class Line {
 	private final Point p;
 	private final Vector v;
 
+	public Line(Point p, Vector v) {
+		this.p = p;
+		this.v = v;
+	}
+
 	/**
 	 * Copy constructor
 	 * 
@@ -25,6 +30,14 @@ public class Line {
 	public double calculateAngle(Point p1) {
 		Vector rp1 = new Vector(p, p1);
 		return v.getAngle(rp1);
+	}
+
+	public void turnLine(Point p1) {
+
+	}
+
+	public void turnLine(double angle) {
+
 	}
 
 	/**
@@ -51,6 +64,17 @@ public class Line {
 		 */
 
 		return null;
+	}
+
+	/**
+	 * 
+	 * @param rectangle
+	 *            Array of 4 lines. Line 0 and 2, and 1 and 3 are parallel.
+	 * @return
+	 */
+	public static double calculateRectangleArea(Line[] rectangle) {
+		return calculateRectangleArea(rectangle[0], rectangle[1], rectangle[2],
+				rectangle[3]);
 	}
 
 	/**

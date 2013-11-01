@@ -14,9 +14,6 @@ public class Source {
 		points.add(new Point(2, 0));
 		points.add(new Point(2, 2));
 
-		VogelPoint p1 = new VogelPoint(1, 0);
-		VogelPoint p2 = new VogelPoint(2, 0);
-		boolean bla = p1.isLess(p2);
 		ModifiedGraham g = new ModifiedGraham();
 		List<Point> out = g.calculateMinConvexHull(points);
 

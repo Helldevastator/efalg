@@ -3,8 +3,8 @@ package ch.fhnw.efalg.schwammberger.jonas.uebung4;
 import java.awt.Point;
 
 public class Vector {
-	private final int x;
-	private final int y;
+	private final double x;
+	private final double y;
 
 	public Vector(Point p0, Point p1) {
 		x = p0.x - p1.x;
@@ -26,7 +26,7 @@ public class Vector {
 	 * @param x
 	 * @param y
 	 */
-	public Vector(int x, int y) {
+	public Vector(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -49,7 +49,7 @@ public class Vector {
 	 * @return angle in radiants
 	 */
 	public double getAngle(Vector v) {
-		int dot;
+		double dot;
 		dot = x * v.x + y * v.y;
 		double mag = this.calculateMagnitude() * v.calculateMagnitude();
 

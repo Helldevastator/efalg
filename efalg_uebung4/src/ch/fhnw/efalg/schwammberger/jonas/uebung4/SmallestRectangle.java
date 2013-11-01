@@ -2,7 +2,6 @@ package ch.fhnw.efalg.schwammberger.jonas.uebung4;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SmallestRectangle {
 	private final ArrayList<Point> convexHull;
@@ -13,23 +12,69 @@ public class SmallestRectangle {
 
 	}
 
-	public List<Line> calculateSmallestRectangle() {
-		// index of maxima
-		int lowI = 0;
-		int leftI = this.findMin(true);
-		int rightI = this.findMax(true);
-		int topI = this.findMax(false);
+	public Line[] calculateSmallestRectangle() {
+		Line[] minRectangle = new Line[4];
+		Line[] currentRectangle = new Line[4];
+		int[] hullIndices = { 0, this.findMin(true), this.findMax(true),
+				this.findMax(false) };
+		double minArea;
+		double totalAngle = 0;
 
-		return null;
-	}
+		minRectangle[0] = new Line(convexHull.get(hullIndices[0]), new Vector(
+				1, 0)); // lower
+		// horizontal
+		// line
+		minRectangle[1] = new Line(convexHull.get(hullIndices[1]), new Vector(
+				0, 1)); // left vertical line
+		minRectangle[2] = new Line(convexHull.get(hullIndices[2]), new Vector(
+				0, 1)); // right vertical line
+		minRectangle[3] = new Line(convexHull.get(hullIndices[3]), new Vector(
+				1, 0)); // top horizontal line
 
-	/**
-	 * 
-	 */
-	private void getPossibleSolutions() {
-		double angle = 0;
-		Solution min = new Solution();
-		Solution current = new Solution();
+		minArea = Line.calculateRectangleArea(minRectangle);
+
+		// copy
+		for (int i = 0; i < 4; i++)
+			currentRectangle[i] = new Line(minRectangle[i]);
+
+		// set minimum
+		while (totalAngle < Math.PI / 2) {
+			// find line with smallest turning angle
+			double smallestAngle = Double.MAX_VALUE;
+			int index = 0;
+			for (int i = 0; i < 4; i++) {
+				double currentAngle = currentRectangle[i]
+						.calculateAngle(convexHull.get(hullIndices[i] - 1));
+				if (smallestAngle > currentAngle) {
+					smallestAngle = currentAngle;
+					index = i;
+				}
+			}
+
+			// turn smallest line
+			currentRectangle[index]
+					.turnLine(convexHull.get(hullIndices[index]));
+			hullIndices[index]--;
+
+			// turn other lines
+			for (int i = 0; i < 4; i++) {
+				if (i != index)
+					currentRectangle[i].turnLine(smallestAngle);
+			}
+
+			totalAngle += smallestAngle;
+			double currentArea = Line.calculateRectangleArea(currentRectangle);
+
+			if (currentArea < minArea) {
+				minArea = currentArea;
+
+				// copy to minimum
+				for (int i = 0; i < 4; i++)
+					minRectangle[i] = new Line(currentRectangle[i]);
+			}
+		}
+
+		return minRectangle;
 	}
 
 	/**
@@ -66,13 +111,6 @@ public class SmallestRectangle {
 			}
 		}
 		return index;
-	}
-
-	private class Solution {
-		Line a;
-		Line b;
-		Line c;
-		Line d;
 	}
 
 }
