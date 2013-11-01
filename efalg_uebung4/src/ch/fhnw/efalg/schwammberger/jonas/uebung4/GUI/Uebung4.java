@@ -1,16 +1,22 @@
 package ch.fhnw.efalg.schwammberger.jonas.uebung4.GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import ch.fhnw.efalg.schwammberger.jonas.uebung4.SmallestRectangle;
+
 public class Uebung4 {
 
-	private JFrame frame;
+	private JFrame frmSmallestEnclosingRectangle;
+	private PointsPanel clickPlane;
 
 	/**
 	 * Launch the application.
@@ -21,7 +27,7 @@ public class Uebung4 {
 			public void run() {
 				try {
 					Uebung4 window = new Uebung4();
-					window.frame.setVisible(true);
+					window.frmSmallestEnclosingRectangle.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -40,23 +46,38 @@ public class Uebung4 {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 619, 496);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		frmSmallestEnclosingRectangle = new JFrame();
+		frmSmallestEnclosingRectangle.setTitle("Smallest Enclosing Rectangle");
+		frmSmallestEnclosingRectangle.setBounds(100, 100, 619, 496);
+		frmSmallestEnclosingRectangle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmSmallestEnclosingRectangle.getContentPane().setLayout(new BorderLayout(0, 0));
 
 		JPanel ControlsPanel = new JPanel();
-		frame.getContentPane().add(ControlsPanel, BorderLayout.WEST);
+		frmSmallestEnclosingRectangle.getContentPane().add(ControlsPanel, BorderLayout.WEST);
 		ControlsPanel.setLayout(new BoxLayout(ControlsPanel, BoxLayout.Y_AXIS));
 
 		JButton btnCalculateRectangle = new JButton("Calculate Rectangle");
+		btnCalculateRectangle.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				SmallestRectangle algo = new SmallestRectangle(clickPlane.getPoints());
+				clickPlane.setRectangle(algo.calculateSmallestRectangle());
+			}
+		});
 		ControlsPanel.add(btnCalculateRectangle);
 		JButton btnClear = new JButton("Clear");
+		btnClear.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				clickPlane.clear();
+			}
+		});
 		ControlsPanel.add(btnClear);
 
-		JPanel ClickPlane = new PointsPanel();
+		PointsPanel ClickPlane = new PointsPanel();
+		ClickPlane.setBackground(Color.WHITE);
 
-		frame.getContentPane().add(ClickPlane, BorderLayout.CENTER);
+		frmSmallestEnclosingRectangle.getContentPane().add(ClickPlane, BorderLayout.CENTER);
 
 		//frame.getContentPane().add(panel, BorderLayout.NORTH);
 	}

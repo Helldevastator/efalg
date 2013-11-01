@@ -9,8 +9,11 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import ch.fhnw.efalg.schwammberger.jonas.uebung4.Line;
+
 public class PointsPanel extends JPanel {
 	private List<Point> points;
+	private Point[] rectangle;
 
 	public PointsPanel() {
 		super();
@@ -29,6 +32,19 @@ public class PointsPanel extends JPanel {
 
 		//g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+	}
+
+	public List<Point> getPoints() {
+		return this.points;
+	}
+
+	public void setRectangle(Line[] rectangle) {
+
+	}
+
+	public void clear() {
+		this.points.clear();
+		this.rectangle = null;
 	}
 
 }

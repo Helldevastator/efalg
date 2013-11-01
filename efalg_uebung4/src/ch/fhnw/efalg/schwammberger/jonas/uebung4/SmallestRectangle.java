@@ -2,14 +2,15 @@ package ch.fhnw.efalg.schwammberger.jonas.uebung4;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SmallestRectangle {
 	private final ArrayList<Point> convexHull;
 	private final double piHalf = Math.PI / 2;
 
-	public SmallestRectangle(ArrayList<Point> convexHull) {
-		this.convexHull = convexHull;
-
+	public SmallestRectangle(List<Point> points) {
+		//this.convexHull = list;
+		this.convexHull = null;
 	}
 
 	public Line[] calculateSmallestRectangle() {
