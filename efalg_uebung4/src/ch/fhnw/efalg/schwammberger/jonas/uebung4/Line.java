@@ -34,6 +34,21 @@ public class Line {
 	 * @return
 	 */
 	public Point calculateIntersectionPoint(Line l) {
+		Vector s = this.v;
+		Vector t;
+
+		/*
+		 * int sx = p2.x - p1.x; int sy = p2.y - p1.y; int tx = -(l.p2.x -
+		 * l.p1.x); int ty = -(l.p2.y - l.p1.y);
+		 * 
+		 * int sm = p1.y - p1.x; int tm = l.p1.y - l.p1.x;
+		 * 
+		 * int main = sx * (ty) - sy * tx; int minort = tx * tm - ty * sm; int
+		 * minors = sx * tm - sy * sm;
+		 * 
+		 * double s1 = -(double) minort / main; double t1 = (double) minors /
+		 * main;
+		 */
 
 		return null;
 	}

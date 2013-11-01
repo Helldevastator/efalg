@@ -1,4 +1,4 @@
-package efalg_task3;
+package ch.fhnw.efalg.schwammberger.jonas.uebung4;
 
 /**
  * ----------------------------------------------------------------- -------
@@ -9,71 +9,73 @@ package efalg_task3;
  * -----------------------------------------------------------------
  */
 
-class Point {
+class VogelPoint {
 	public double x, y;
 
-	public Point(double x, double y) {
+	public VogelPoint(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
 
-	public double dist(Point p) {
+	public double dist(VogelPoint p) {
 		double dx = x - p.x;
 		double dy = y - p.y;
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 
-	public Point(Point p) {
+	public VogelPoint(VogelPoint p) {
 		this(p.x, p.y);
 	}
 
-	public Point relTo(Point p) {
-		return new Point(x - p.x, y - p.y);
+	public VogelPoint relTo(VogelPoint p) {
+		return new VogelPoint(x - p.x, y - p.y);
 	}
 
-	public void makeRelTo(Point p) {
+	public void makeRelTo(VogelPoint p) {
 		x -= p.x;
 		y -= p.y;
 	}
 
-	public double dot(Point p) {
+	public double dot(VogelPoint p) {
 		return x * p.x + y * p.y;
 	}
 
-	public Point reversed() {
-		return new Point(-x, -y);
+	public VogelPoint reversed() {
+		return new VogelPoint(-x, -y);
 	}
 
 	public double mdist() { // Manhattan-distance
 		return Math.abs(x) + Math.abs(y);
 	}
 
-	public double mdist(Point p) {
+	public double mdist(VogelPoint p) {
 		return relTo(p).mdist();
 	}
 
-	public boolean isFurther(Point p) {
+	public boolean isFurther(VogelPoint p) {
 		return mdist() > p.mdist();
 	}
 
-	public boolean isBetween(Point p0, Point p1) {
+	public boolean isBetween(VogelPoint p0, VogelPoint p1) {
 		return p0.mdist(p1) >= mdist(p0) + mdist(p1);
 	}
 
-	public double cross(Point p) {
+	public double cross(VogelPoint p) {
 		return x * p.y - p.x * y;
 	}
 
-	public boolean isLess(Point p) {
+	public boolean isLess(VogelPoint p) {
 		double f = cross(p);
+		double bla1 = mdist();
+		double bla2 = p.mdist();
 		return f > 0 || f == 0 && isFurther(p);
 	}
 
-	public double area2(Point p0, Point p1) {
+	public double area2(VogelPoint p0, VogelPoint p1) {
 		return p0.relTo(this).cross(p1.relTo(this));
 	}
 
-	public boolean isConvex(Point p0, Point p1) {
+	public boolean isConvex(VogelPoint p0, VogelPoint p1) {
 		double f = area2(p0, p1);
 		return f < 0 || f == 0 && !isBetween(p0, p1);
 	}

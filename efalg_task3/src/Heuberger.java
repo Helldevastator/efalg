@@ -1,11 +1,9 @@
-package efalg_task3;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Scanner;
 
 public class Heuberger {
@@ -14,16 +12,16 @@ public class Heuberger {
 	static ArrayList<Point> sortedPoints; // only one of the lines pair
 
 	public static void read() throws Exception {
-		Scanner in = new Scanner(new File("heuberger_test.in"));
+		Scanner in = new Scanner(new File("heuberger.in"));
 
-		center = new Point(in.nextInt(), in.nextInt());
+		center = new Point(0, 0);
 		int size = in.nextInt();
 		sortedPoints = new ArrayList<>(size + 1);
 
 		sortedPoints.add(center);
 		for (int i = 0; i < size; i += 2) {
-			Point p1 = new Point(in.nextInt(), in.nextInt());
-			Point p2 = new Point(in.nextInt(), in.nextInt());
+			Point p1 = new Point(in.nextDouble(), in.nextDouble());
+			Point p2 = new Point(in.nextDouble(), in.nextDouble());
 			Line l;
 			if (p1.x < p2.x) {
 				sortedPoints.add(p1);
@@ -45,18 +43,14 @@ public class Heuberger {
 		checkHalf(visible, true);
 		checkHalf(visible, false);
 
-		Iterator<Line> it = visible.iterator();
-		while (it.hasNext()) {
-			Line l = it.next();
-			System.out.println(l.p1.x + " " + l.p1.y + " " + l.p2.x + " "
-					+ l.p2.y);
-		}
+		/*
+		 * Iterator<Line> it = visible.iterator(); while (it.hasNext()) { Line l
+		 * = it.next(); System.out.println(l.p1.x + " " + l.p1.y + " " + l.p2.x
+		 * + " " + l.p2.y); }
+		 */
 		PrintWriter out = new PrintWriter("heuberger.out");
+		out.println(visible.size());
 		out.close();
-
-		Line s1 = new Line(new Point(1, 1), new Point(3, 3));
-		Line t1 = new Line(new Point(1, 1), new Point(3, 3));
-		int bla1 = s1.intersects(t1);
 	}
 
 	public static void checkHalf(HashSet<Line> visible, boolean startLow) {
@@ -76,7 +70,7 @@ public class Heuberger {
 					Line view = viewLines.get(j);
 					int intersects = obstacle.intersects(view);
 
-					if (intersects >= 0) {
+					if (intersects > 0) {
 						// intersects, so don't need to check it again
 						viewLines.remove(j);
 						j--;
@@ -102,18 +96,18 @@ public class Heuberger {
 	}
 
 	public static class Point implements Comparable<Point> {
-		int x;
-		int y;
+		double x;
+		double y;
 		Line obstacle;
 
-		public Point(int x, int y) {
+		public Point(double x, double y) {
 			this.x = x;
 			this.y = y;
 		}
 
 		@Override
 		public int compareTo(Point o) {
-			return Integer.compare(x, o.x);
+			return Double.compare(x, o.x);
 		}
 	}
 
@@ -127,20 +121,20 @@ public class Heuberger {
 		}
 
 		public int intersects(Line l) {
-			int sx = p2.x - p1.x;
-			int sy = p2.y - p1.y;
-			int tx = -(l.p2.x - l.p1.x);
-			int ty = -(l.p2.y - l.p1.y);
+			double sx = p2.x - p1.x;
+			double sy = p2.y - p1.y;
+			double tx = -(l.p2.x - l.p1.x);
+			double ty = -(l.p2.y - l.p1.y);
 
-			int sm = p1.y - p1.x;
-			int tm = l.p1.y - l.p1.x;
+			double sm = p1.y - p1.x;
+			double tm = l.p1.y - l.p1.x;
 
-			int main = sx * (ty) - sy * tx;
-			int minort = tx * tm - ty * sm;
-			int minors = sx * tm - sy * sm;
+			double main = sx * (ty) - sy * tx;
+			double minort = tx * tm - ty * sm;
+			double minors = sx * tm - sy * sm;
 
-			double s1 = -(double) minort / main;
-			double t1 = (double) minors / main;
+			double s1 = -minort / main;
+			double t1 = minors / main;
 
 			if (s1 > 1.0 || s1 < 0.0 || t1 > 1.0 || t1 < 0.0)
 				return -1;

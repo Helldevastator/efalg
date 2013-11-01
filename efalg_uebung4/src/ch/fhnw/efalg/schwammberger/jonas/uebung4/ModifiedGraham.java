@@ -14,7 +14,8 @@ import java.util.List;
  * 
  */
 public class ModifiedGraham {
-	private ArrayList<HelperPoint> p;
+	private ArrayList<HelperPoint> helperP;
+	private Point lowest;
 
 	/**
 	 * 
@@ -25,7 +26,7 @@ public class ModifiedGraham {
 		if (p.size() <= 3)
 			return p;
 
-		this.createList(p);
+		this.createHelperList(p);
 		return this.graham();
 	}
 
@@ -34,28 +35,32 @@ public class ModifiedGraham {
 	 * 
 	 * @param in
 	 */
-	private void createList(List<Point> in) {
+	private void createHelperList(List<Point> in) {
 		int low = findLowest(in);
-		Point lowest = in.get(low);
-		p = new ArrayList<>(in.size());
+		lowest = in.get(low);
+		helperP = new ArrayList<>(in.size());
 
-		p.add(new HelperPoint(lowest, lowest));
 		for (int i = 0; i < in.size(); i++)
 			if (low != i)
-				p.add(new HelperPoint(in.get(i), lowest));
+				helperP.add(new HelperPoint(in.get(i), lowest));
+		Collections.sort(helperP);
 	}
 
 	private List<Point> graham() {
 		// heuristic,expect that half of the points are not inside the
 		// convexhull
-		ArrayList<Point> convexHull = new ArrayList<>(p.size() / 2);
-		Collections.sort(p);
+		int startSize = helperP.size() > 21 ? helperP.size() / 2 : 10;
+		ArrayList<Point> convexHull = new ArrayList<>(startSize);
 
-		for (int i = 3; i < p.size(); i++) {
-			Point next = p.get(i).getP();
-			while (!isConvex(convexHull, next))
-				convexHull.remove(convexHull.size() - 1);
-			convexHull.add(next);
+		// fill convexHull
+		convexHull.add(lowest);
+		convexHull.add(helperP.get(0).getP());
+
+		for (int i = 1; i < helperP.size(); i++) {
+			Point next = helperP.get(i).getP();
+
+			if (isConvex(convexHull, next))
+				convexHull.add(next);
 		}
 
 		/*
@@ -110,8 +115,8 @@ public class ModifiedGraham {
 	 * @return index of lowest point in p
 	 */
 	private final static int findLowest(List<Point> p) {
-		int i, min = 0;
-		for (i = 1; i < p.size(); i++)
+		int min = 0;
+		for (int i = 1; i < p.size(); i++)
 			if (p.get(i).y < p.get(min).y || p.get(i).y == p.get(min).y
 					&& p.get(i).x < p.get(min).x)
 				min = i;
