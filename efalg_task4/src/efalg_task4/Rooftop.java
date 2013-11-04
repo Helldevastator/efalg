@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Scanner;
 
 public class Rooftop {
@@ -30,28 +31,40 @@ public class Rooftop {
 	}
 
 	private static void sweep() {
-
-		LinkedList<Point> cornerPoints = null;
+		OrderedList<Point> cornerPoints = null;
 		ArrayList<Line> roof = new ArrayList<>();
 		ArrayList<Line> preliminaryRoof = new ArrayList<>();
 
 		while (cornerPoints.size() > 0) {
 			Point p = cornerPoints.pop();
 
-			//if is building point
+			if (p.isRoofPoint) {
 
-			//if is roofPoint
+			} else {
+				Line newRoof = null;
+				if (p.isCounterClockWise()) {
+
+				} else {
+
+				}
+				checkNewRoof(newRoof, roof, preliminaryRoof, cornerPoints);
+			}
 
 		}
 
 		//look for highest roof
+		double max = 0;
 		for (int i = 0; i < roof.size(); i++) {
-
+			if (roof.get(i).isDiagonal) {
+				double magnitude = roof.get(i).magnitude();
+				if (magnitude > max)
+					max = magnitude;
+			}
 		}
 
 	}
 
-	private static void checkNewLine(Line l, ArrayList<Line> roof, ArrayList<Line> preliminaryRoof, LinkedList<Point> cornerPoints) {
+	private static void checkNewRoof(Line l, ArrayList<Line> roof, ArrayList<Line> preliminaryRoof, OrderedList<Point> cornerPoints) {
 		boolean foundIntersection = false;
 		//check for intersection
 		for (int i = 0; i < preliminaryRoof.size(); i++) {
@@ -61,25 +74,20 @@ public class Rooftop {
 				Point intersection = null;
 
 				//get intersection point
-				//set endpoint to intersection
+				Point interP = null;
+				other.end = interP;
+				l.end = interP;
+
 				//add both rooflines to roof
-				//add intersection point
-				cornerPoints.add(intersection);
-				foundIntersection = true;
-				break;
-			}
-
-			//touches
-			if (intersects == 0) {
-				//remove found roofLine
-
-				//add l to roof
+				roof.add(other);
+				roof.add(l);
+				preliminaryRoof.remove(other);
+				cornerPoints.orderedAdd(interP);
 				foundIntersection = true;
 				break;
 			}
 		}
 
-		//needed?
 		boolean foundTouch = false;
 		if (!foundIntersection) {
 			for (int i = 0; i < roof.size(); i++) {
@@ -87,11 +95,16 @@ public class Rooftop {
 				if (touches == 0) {
 					foundTouch = true;
 
-					//set endpoint to touchpoint
+					Point touchPoint = null;
+					l.end = touchPoint;
+					roof.add(l);
 					break;
 				}
 			}
 		}
+
+		if (!foundIntersection && !foundTouch)
+			preliminaryRoof.add(l);
 	}
 
 	private static Line newRoof(Point before, Point current, Point after) {
@@ -99,10 +112,47 @@ public class Rooftop {
 		return null;
 	}
 
+	public static class Point implements Comparable<Point> {
+		double x;
+		double y;
+		Point before;
+		Point after;
+		boolean isRoofPoint;
+		boolean isHorizontal;
+
+		public Point(double x, double y) {
+			this.x = x;
+			this.y = y;
+			isRoofPoint = false;
+		}
+
+		public Point(double x, double y, boolean isRoofPoint) {
+			this.isRoofPoint = isRoofPoint;
+			this.x = x;
+			this.y = y;
+		}
+
+		public boolean isCounterClockWise() {
+			return false;
+		}
+
+		@Override
+		public int compareTo(Point o) {
+			int comp = Double.compare(x, o.x);
+
+			return comp == 0 ? Double.compare(y, o.y) : comp;
+		}
+
+	}
+
 	public static class Line {
 		Point start;
 		Point end;
 		boolean isDiagonal;
+
+		public double magnitude() {
+			return 0;
+		}
 
 		public int intersects(Line l) {
 			//			double sx = p2.x - p1.x;
@@ -129,6 +179,29 @@ public class Rooftop {
 
 			return 0;
 
+		}
+	}
+
+	public class OrderedList<T extends Comparable<T>> extends LinkedList<T> {
+
+		private static final long serialVersionUID = 1L;
+
+		public boolean orderedAdd(T element) {
+			ListIterator<T> itr = listIterator();
+			while (true) {
+				if (itr.hasNext() == false) {
+					itr.add(element);
+					return true;
+				}
+
+				T elementInList = itr.next();
+				if (elementInList.compareTo(element) > 0) {
+					itr.previous();
+					itr.add(element);
+					System.out.println("Adding");
+					return true;
+				}
+			}
 		}
 	}
 }
