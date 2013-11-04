@@ -74,10 +74,10 @@ public class Uebung4 {
 		});
 		ControlsPanel.add(btnClear);
 
-		PointsPanel ClickPlane = new PointsPanel();
-		ClickPlane.setBackground(Color.WHITE);
+		clickPlane = new PointsPanel();
+		clickPlane.setBackground(Color.WHITE);
 
-		frmSmallestEnclosingRectangle.getContentPane().add(ClickPlane, BorderLayout.CENTER);
+		frmSmallestEnclosingRectangle.getContentPane().add(clickPlane, BorderLayout.CENTER);
 
 		//frame.getContentPane().add(panel, BorderLayout.NORTH);
 	}

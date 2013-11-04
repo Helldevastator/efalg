@@ -9,8 +9,8 @@ public class SmallestRectangle {
 	private final double piHalf = Math.PI / 2;
 
 	public SmallestRectangle(List<Point> points) {
-		//this.convexHull = list;
-		this.convexHull = null;
+		ModifiedGraham graham = new ModifiedGraham();
+		this.convexHull = graham.calculateMinConvexHull(points);
 	}
 
 	public Line[] calculateSmallestRectangle() {

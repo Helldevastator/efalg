@@ -22,9 +22,9 @@ public class ModifiedGraham {
 	 * @param p
 	 * @return
 	 */
-	public List<Point> calculateMinConvexHull(List<Point> p) {
+	public ArrayList<Point> calculateMinConvexHull(List<Point> p) {
 		if (p.size() <= 3)
-			return p;
+			return new ArrayList<Point>(p);
 
 		this.createHelperList(p);
 		return this.graham();
@@ -46,7 +46,7 @@ public class ModifiedGraham {
 		Collections.sort(helperP);
 	}
 
-	private List<Point> graham() {
+	private ArrayList<Point> graham() {
 		// heuristic,expect that half of the points are not inside the
 		// convexhull
 		int startSize = helperP.size() > 21 ? helperP.size() / 2 : 10;
@@ -68,8 +68,7 @@ public class ModifiedGraham {
 		 * P0 and Pn-1 build a line with Pn on it, remove Pn
 		 */
 		int n = convexHull.size() - 1;
-		if (!isConvex(convexHull.get(n - 1), convexHull.get(n),
-				convexHull.get(0)))
+		if (!isConvex(convexHull.get(n - 1), convexHull.get(n), convexHull.get(0)))
 			convexHull.remove(n);
 
 		return convexHull;
@@ -117,8 +116,7 @@ public class ModifiedGraham {
 	private final static int findLowest(List<Point> p) {
 		int min = 0;
 		for (int i = 1; i < p.size(); i++)
-			if (p.get(i).y < p.get(min).y || p.get(i).y == p.get(min).y
-					&& p.get(i).x < p.get(min).x)
+			if (p.get(i).y < p.get(min).y || p.get(i).y == p.get(min).y && p.get(i).x < p.get(min).x)
 				min = i;
 		return min;
 	}
@@ -158,8 +156,7 @@ public class ModifiedGraham {
 				return 0;
 
 			int f = this.relativeCross(o);
-			boolean isLess = f > 0 || f == 0
-					&& relativeMDist() > o.relativeMDist();
+			boolean isLess = f > 0 || f == 0 && relativeMDist() > o.relativeMDist();
 			return isLess ? -1 : 1;
 		}
 
