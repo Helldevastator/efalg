@@ -31,23 +31,66 @@ public class Rooftop {
 	}
 
 	private static void sweep() {
-		/*
-		 * LinkedList<Corner> cornerPoints = null; ArrayList<Line> roof = new
-		 * ArrayList<>();
-		 * 
-		 * while (cornerPoints.size() > 0) { // add roof line Corner p =
-		 * cornerPoints.pop(); Line r = newRoof(p);
-		 * 
-		 * // check if new roof line intersection with other rooflines for (int
-		 * i = 0; i < roof.size(); i++) { int intersects =
-		 * roof.get(i).intersects(r); if (intersects >= 0) { if (intersects ==
-		 * 0) { //if touches, just set end point of this roof } else { //set
-		 * other roof line to cross point //insert cross point
-		 * cornerPoints.add(); //break loop } } } }
-		 */
+
+		LinkedList<Point> cornerPoints = null;
+		ArrayList<Line> roof = new ArrayList<>();
+		ArrayList<Line> preliminaryRoof = new ArrayList<>();
+
+		while (cornerPoints.size() > 0) {
+			// add roof line Corner p =
+			Point p = cornerPoints.pop();
+			//if is building point
+			Line newRoof = null;
+
+			//if is roofPoint
+
+		}
 
 		//look for highest roof
 
+	}
+
+	private static void checkNewLine(Line l, ArrayList<Line> roof, ArrayList<Line> preliminaryRoof, LinkedList<Point> cornerPoints) {
+		boolean foundIntersection = false;
+		//check for intersection
+		for (int i = 0; i < preliminaryRoof.size(); i++) {
+			Line other = preliminaryRoof.get(i);
+			int intersects = other.intersects(l);
+			if (intersects == 1) {
+				Point intersection = null;
+
+				//get intersection point
+				//set endpoint to intersection
+				//add both rooflines to roof
+				//add intersection point
+				cornerPoints.add(intersection);
+				foundIntersection = true;
+				break;
+			}
+
+			//touches
+			if (intersects == 0) {
+				//remove found roofLine
+
+				//add l to roof
+				foundIntersection = true;
+				break;
+			}
+		}
+
+		//needed?
+		boolean foundTouch = false;
+		if (!foundIntersection) {
+			for (int i = 0; i < roof.size(); i++) {
+				int touches = roof.get(i).intersects(l);
+				if (touches == 0) {
+					foundTouch = true;
+
+					//set endpoint to touchpoint
+					break;
+				}
+			}
+		}
 	}
 
 	private static Line newRoof(Point before, Point current, Point after) {
@@ -55,10 +98,41 @@ public class Rooftop {
 		return null;
 	}
 
+	private static void findBiggest() {
+
+	}
+
 	public static class Line {
-		Point p1;
-		Point p2;
+		Point start;
+		Point end;
 		boolean isDiagonal;
+
+		public int intersects(Line l) {
+			//			double sx = p2.x - p1.x;
+			//			double sy = p2.y - p1.y;
+			//			double tx = -(l.p2.x - l.p1.x);
+			//			double ty = -(l.p2.y - l.p1.y);
+			//
+			//			double sm = p1.y - p1.x;
+			//			double tm = l.p1.y - l.p1.x;
+			//
+			//			double main = sx * (ty) - sy * tx;
+			//			double minort = tx * tm - ty * sm;
+			//			double minors = sx * tm - sy * sm;
+			//
+			//			double s1 = -minort / main;
+			//			double t1 = minors / main;
+			//
+			//			if (s1 > 1.0 || s1 < 0.0 || t1 > 1.0 || t1 < 0.0)
+			//				return -1;
+			//			else if (s1 == 0.0 || s1 == 1.0 || t1 == 0 || t1 == 1.0)
+			//				return 0;
+			//			else
+			//				return 1;
+
+			return 0;
+
+		}
 	}
 
 	public static class Intersection {
