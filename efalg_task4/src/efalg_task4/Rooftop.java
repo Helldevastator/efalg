@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Rooftop {
@@ -37,16 +36,18 @@ public class Rooftop {
 		ArrayList<Line> preliminaryRoof = new ArrayList<>();
 
 		while (cornerPoints.size() > 0) {
-			// add roof line Corner p =
 			Point p = cornerPoints.pop();
+
 			//if is building point
-			Line newRoof = null;
 
 			//if is roofPoint
 
 		}
 
 		//look for highest roof
+		for (int i = 0; i < roof.size(); i++) {
+
+		}
 
 	}
 
@@ -98,10 +99,6 @@ public class Rooftop {
 		return null;
 	}
 
-	private static void findBiggest() {
-
-	}
-
 	public static class Line {
 		Point start;
 		Point end;
@@ -133,11 +130,5 @@ public class Rooftop {
 			return 0;
 
 		}
-	}
-
-	public static class Intersection {
-		List<Line> lines;
-		Point current;
-
 	}
 }
