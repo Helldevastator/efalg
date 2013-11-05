@@ -2,6 +2,12 @@ package ch.fhnw.efalg.schwammberger.jonas.uebung4;
 
 import java.awt.Point;
 
+/**
+ * Represents an infinite line
+ * 
+ * @author Jon
+ * 
+ */
 public class Line {
 	private Point p;
 	private Vector v;
@@ -83,8 +89,7 @@ public class Line {
 	 * @return
 	 */
 	public static double calculateRectangleArea(Line[] rectangle) {
-		return calculateRectangleArea(rectangle[0], rectangle[1], rectangle[2],
-				rectangle[3]);
+		return calculateRectangleArea(rectangle[0], rectangle[1], rectangle[2], rectangle[3]);
 	}
 
 	/**

@@ -2,6 +2,12 @@ package ch.fhnw.efalg.schwammberger.jonas.uebung4;
 
 import java.awt.Point;
 
+/**
+ * Represents a two dimensional vector
+ * 
+ * @author Jon
+ * 
+ */
 public class Vector {
 	private final double x;
 	private final double y;

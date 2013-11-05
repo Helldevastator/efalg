@@ -4,6 +4,12 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Algorithm to calculate the smallest enclosing rectangle from a set of points.
+ * 
+ * @author Jon
+ * 
+ */
 public class SmallestRectangle {
 	private final ArrayList<Point> convexHull;
 	private final double piHalf = Math.PI / 2;
