@@ -62,4 +62,9 @@ public class Vector {
 		return Math.acos(dot / mag);
 	}
 
+	@Override
+	public String toString() {
+		return "Vector[vx=" + x + ",vy=" + y + "]";
+	}
+
 }

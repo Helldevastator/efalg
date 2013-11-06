@@ -22,14 +22,15 @@ public class SmallestRectangle {
 	public Line[] calculateSmallestRectangle() {
 		Line[] minRectangle = new Line[4];
 		Line[] currentRectangle = new Line[4];
-		int[] hullIndices = { 0, this.findMin(true), this.findMax(true), this.findMax(false) };
+		int[] hullIndices = { 0, this.findMin(true), this.findMax(false), this.findMax(true) };
+		int size = this.convexHull.size();
 		double minArea;
 		double totalAngle = 0;
 
 		minRectangle[0] = new Line(convexHull.get(hullIndices[0]), new Vector(1, 0)); // lower horizontal line
 		minRectangle[1] = new Line(convexHull.get(hullIndices[1]), new Vector(0, 1)); // left vertical line
-		minRectangle[2] = new Line(convexHull.get(hullIndices[2]), new Vector(0, 1)); // right vertical line
-		minRectangle[3] = new Line(convexHull.get(hullIndices[3]), new Vector(1, 0)); // top horizontal line
+		minRectangle[2] = new Line(convexHull.get(hullIndices[2]), new Vector(1, 0)); // top horizontal line
+		minRectangle[3] = new Line(convexHull.get(hullIndices[3]), new Vector(0, 1)); // right vertical line
 
 		minArea = Line.calculateRectangleArea(minRectangle);
 
@@ -43,7 +44,11 @@ public class SmallestRectangle {
 			double smallestAngle = Double.MAX_VALUE;
 			int index = 0;
 			for (int i = 0; i < 4; i++) {
-				double currentAngle = currentRectangle[i].calculateAngle(convexHull.get(hullIndices[i] - 1));
+				int nextIndex = (hullIndices[i] + 1) % size;
+				double currentAngle = currentRectangle[i].calculateAngle(convexHull.get(nextIndex));
+				System.out.println(Math.toDegrees(currentAngle));
+				System.out.println(convexHull.get(nextIndex));
+				System.out.println(currentRectangle[i].toString());
 				if (Math.abs(smallestAngle) > Math.abs(currentAngle)) {
 					smallestAngle = currentAngle;
 					index = i;
@@ -52,7 +57,7 @@ public class SmallestRectangle {
 
 			// turn smallest line
 			currentRectangle[index].turnLine(convexHull.get(hullIndices[index]));
-			hullIndices[index]--;
+			hullIndices[index] = (hullIndices[index] + 1) % size;
 
 			// turn other lines
 			for (int i = 0; i < 4; i++) {
@@ -85,7 +90,7 @@ public class SmallestRectangle {
 		int index = -1;
 		for (int i = 0; i < convexHull.size(); i++) {
 			int val = useX ? convexHull.get(i).x : convexHull.get(i).y;
-			if (min < val) {
+			if (min > val) {
 				min = val;
 				index = i;
 			}
@@ -103,12 +108,24 @@ public class SmallestRectangle {
 		int index = -1;
 		for (int i = 0; i < convexHull.size(); i++) {
 			int val = useX ? convexHull.get(i).x : convexHull.get(i).y;
-			if (max > val) {
+			if (max < val) {
 				max = val;
 				index = i;
 			}
 		}
 		return index;
+	}
+
+	public static void main(String[] args) {
+		ArrayList<Point> points = new ArrayList<>();
+		points.add(new Point(0, 5));
+		points.add(new Point(5, 5));
+		points.add(new Point(5, 0));
+		points.add(new Point(10, 5));
+		points.add(new Point(5, 10));
+		SmallestRectangle rec = new SmallestRectangle(points);
+
+		Line[] l = rec.calculateSmallestRectangle();
 	}
 
 }

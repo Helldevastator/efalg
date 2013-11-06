@@ -122,6 +122,11 @@ public class Line {
 	private double getDistanceParallel(Line par) {
 		Vector g0 = new Vector(p, par.p);
 
-		return v.cross(g0) / v.calculateMagnitude();
+		return Math.abs(v.cross(g0) / v.calculateMagnitude());
+	}
+
+	@Override
+	public String toString() {
+		return "Line([x=" + p.x + ",y=" + p.y + "]" + v.toString() + ")";
 	}
 }

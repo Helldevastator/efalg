@@ -59,8 +59,10 @@ public class ModifiedGraham {
 		for (int i = 1; i < helperP.size(); i++) {
 			Point next = helperP.get(i).getP();
 
-			if (isConvex(convexHull, next))
-				convexHull.add(next);
+			while (!isConvex(convexHull, next))
+				convexHull.remove(convexHull.size() - 1);
+
+			convexHull.add(next);
 		}
 
 		/*
@@ -99,12 +101,22 @@ public class ModifiedGraham {
 		Point p2Rel = new Point(p2.x - p1.x, p2.y - p1.y);
 		int area = cross(p0Rel, p2Rel);
 
-		// isbetween check is not implemented, needed?
-		return area < 0;
+		//return area < 0;
+		boolean bla1 = area < 0;
+		boolean bla2 = area == 0 && !isBetween(p0, p1, p2);
+		return area < 0 || area == 0 && !isBetween(p0, p1, p2);
 	}
 
 	private static int cross(Point p0, Point p1) {
 		return p0.x * p1.y - p1.x * p0.y;
+	}
+
+	private static boolean isBetween(Point p0, Point p1, Point p2) {
+		int p0p2 = Math.abs(p0.x - p2.x) + Math.abs(p0.y - p2.y);
+		int p1p0 = Math.abs(p1.x - p0.x) + Math.abs(p1.y - p0.y);
+		int p1p2 = Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
+
+		return p0p2 >= p1p0 + p1p2;
 	}
 
 	/**
@@ -138,7 +150,7 @@ public class ModifiedGraham {
 				relY = 0;
 			} else {
 				relX = p.x - p0.x;
-				relY = p.y - p0.x;
+				relY = p.y - p0.y;
 			}
 		}
 
