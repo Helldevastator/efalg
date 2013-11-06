@@ -28,8 +28,8 @@ public class SmallestRectangle {
 		double totalAngle = 0;
 
 		minRectangle[0] = new Line(convexHull.get(hullIndices[0]), new Vector(1, 0)); // lower horizontal line
-		minRectangle[1] = new Line(convexHull.get(hullIndices[1]), new Vector(0, 1)); // left vertical line
-		minRectangle[2] = new Line(convexHull.get(hullIndices[2]), new Vector(1, 0)); // top horizontal line
+		minRectangle[1] = new Line(convexHull.get(hullIndices[1]), new Vector(0, -1)); // left vertical line
+		minRectangle[2] = new Line(convexHull.get(hullIndices[2]), new Vector(-1, 0)); // top horizontal line
 		minRectangle[3] = new Line(convexHull.get(hullIndices[3]), new Vector(0, 1)); // right vertical line
 
 		minArea = Line.calculateRectangleArea(minRectangle);

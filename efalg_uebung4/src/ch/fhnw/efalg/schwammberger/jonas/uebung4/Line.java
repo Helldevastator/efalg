@@ -34,7 +34,7 @@ public class Line {
 	 * @return angle in radiant
 	 */
 	public double calculateAngle(Point p1) {
-		Vector rp1 = new Vector(p, p1);
+		Vector rp1 = new Vector(p1, p);
 		return v.getAngle(rp1);
 	}
 
