@@ -49,6 +49,7 @@ public class SmallestRectangle {
 				System.out.println(Math.toDegrees(currentAngle));
 				System.out.println(convexHull.get(nextIndex));
 				System.out.println(currentRectangle[i].toString());
+				System.out.println("--------------------------------");
 				if (Math.abs(smallestAngle) > Math.abs(currentAngle)) {
 					smallestAngle = currentAngle;
 					index = i;
