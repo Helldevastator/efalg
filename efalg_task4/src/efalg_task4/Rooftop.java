@@ -16,11 +16,14 @@ public class Rooftop {
 		Scanner in = new Scanner(new File("rooftop_test.in"));
 		int size = in.nextInt();
 
-		ArrayList<Point> input = new ArrayList<>(size);
+		roof = new ArrayList<>(size);
+		roofLines = new ArrayList<>(size - 1);
 		for (int i = 0; i < size; i++)
-			input.add(new Point(in.nextDouble(), in.nextDouble()));
+			roof.add(new Point(in.nextDouble(), in.nextDouble()));
 
-		//for(int i = 0; i < size;i++) {
+		for (int i = 0; i < size - 1; i++) {
+			roofLines.add(new Line(roof.get(i), roof.get((i + 1) % size)));
+		}
 
 	}
 
@@ -28,18 +31,44 @@ public class Rooftop {
 		read();
 		double superSize = 1000;
 
+		int size = roof.size();
+
 		double minDiagonal = Double.MAX_VALUE;
 		for (int i = 0; i < roof.size(); i++) {
+			Point current = roof.get(i);
+			Point next = roof.get(i % size);
+			double angle = calcAngle(roof.get(size - 2 + i), current, next);
+			double currentDiag = 0;
+
+			if (Math.signum(angle) > 0) {
+				//clockwise, do it twice
+			} else {
+				//counter clock wise
+				Line l = new Line(current, next);
+				l.vector.x *= superSize;
+				l.vector.y *= superSize;
+				currentDiag = makeRectangle(0, l);
+			}
+
 			//is counter clock wise
 			//one size
 			//twice
+
 		}
 
 	}
 
 	private static double makeRectangle(int pointIndex, Line startLine) {
 		Point current;
+		Point ps1 = new Point(startLine.start.x + startLine.vector.x, startLine.start.y + startLine.vector.y);
+		Point ps3 = new Point(startLine.start.x + startLine.vector.y, startLine.start.y + startLine.vector.x);
+		Point ps2 = new Point(ps3.x + startLine.vector.x, ps3.y + startLine.vector.y);
+
 		Line[] rect = new Line[4];
+		rect[0] = startLine;
+		rect[1] = new Line(startLine.start, ps1);
+		rect[2] = new Line(ps3, ps2);
+		rect[3] = new Line(startLine.start, ps3);
 		boolean foundRec = false;
 
 		while (!foundRec) {
@@ -99,8 +128,13 @@ public class Rooftop {
 		Point vector;
 		boolean isDiagonal;
 
+		public Line(Point start, Point end) {
+			this.start = start;
+			this.vector = new Point(end.x - start.x, end.y - start.y);
+		}
+
 		public double magnitude() {
-			return 0;
+			return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
 		}
 
 		public int intersects(Line l, Point intersection) {
