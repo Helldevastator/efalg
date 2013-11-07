@@ -3,8 +3,6 @@ package efalg_task4;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.Scanner;
 
 public class Rooftop {
@@ -17,11 +15,12 @@ public class Rooftop {
 		int size = in.nextInt();
 
 		roof = new ArrayList<>(size);
-		roofLines = new ArrayList<>(size - 1);
+
 		for (int i = 0; i < size; i++)
 			roof.add(new Point(in.nextDouble(), in.nextDouble()));
 
-		for (int i = 0; i < size - 1; i++) {
+		roofLines = new ArrayList<>(size);
+		for (int i = 0; i < size; i++) {
 			roofLines.add(new Line(roof.get(i), roof.get((i + 1) % size)));
 		}
 
@@ -36,18 +35,21 @@ public class Rooftop {
 		double minDiagonal = Double.MAX_VALUE;
 		for (int i = 0; i < roof.size(); i++) {
 			Point current = roof.get(i);
-			Point next = roof.get(i % size);
-			double angle = calcAngle(roof.get(size - 2 + i), current, next);
+			Point next = roof.get((i + 1) % size);
+			double angle = calcAngle(roof.get((size - 2 + i) % size), current, next);
 			double currentDiag = 0;
 
 			if (Math.signum(angle) > 0) {
-				//clockwise, do it twice
-			} else {
 				//counter clock wise
 				Line l = new Line(current, next);
-				l.vector.x *= superSize;
-				l.vector.y *= superSize;
-				currentDiag = makeRectangle(0, l);
+
+				currentDiag = makeMaxRectangle(0, l);
+
+			} else {
+				//clockwise, do it twice
+				System.out.println("clockwise");
+				//l.vector.x *= superSize;
+				//l.vector.y *= superSize;
 			}
 
 			//is counter clock wise
@@ -58,15 +60,15 @@ public class Rooftop {
 
 	}
 
-	private static double makeRectangle(int pointIndex, Line startLine) {
+	private static double makeMaxRectangle(int pointIndex, Line startLine) {
 		Point current;
 		Point ps1 = new Point(startLine.start.x + startLine.vector.x, startLine.start.y + startLine.vector.y);
-		Point ps3 = new Point(startLine.start.x + startLine.vector.y, startLine.start.y + startLine.vector.x);
+		Point ps3 = new Point(startLine.start.x + -1 * startLine.vector.y, startLine.start.y + startLine.vector.x);
 		Point ps2 = new Point(ps3.x + startLine.vector.x, ps3.y + startLine.vector.y);
 
 		Line[] rect = new Line[4];
 		rect[0] = startLine;
-		rect[1] = new Line(startLine.start, ps1);
+		rect[1] = new Line(ps1, ps2);
 		rect[2] = new Line(ps3, ps2);
 		rect[3] = new Line(startLine.start, ps3);
 		boolean foundRec = false;
@@ -78,42 +80,64 @@ public class Rooftop {
 					Line line = roofLines.get(i);
 					Point intersection = new Point(0, 0);
 					int inters = line.intersects(rect[j], intersection);
-					if (inters == -1 && !Double.isInfinite(intersection.x)) {
-						//calculate shrink factor
-						Point p1 = line.start;
-						Point p2 = new Point(line.start.x + line.vector.x, line.start.y + line.vector.y);
-						double factor = 0;
-
-						if (p1.mdist(rect[0].start) > p2.mdist(rect[0].start)) {
-							factor = p1.y - intersection.y > 0 ? p1.y - intersection.y : p1.x - intersection.x;
-						} else {
-							factor = p2.y - intersection.y > 0 ? p2.y - intersection.y : p2.x - intersection.x;
-						}
-
-						shrink(rect, factor);
-
+					if (inters > 0 && !Double.isNaN(intersection.x)) {
+						shrink(rect, line, intersection);
 						//retry
 						j = 5;
 						i = roofLines.size();
+					}
+
+					//shrink if square touches and no other side overlays this line
+					if (inters == 0) {
+						boolean overlay = false;
+						Point over = new Point(0, 0);
+						for (int k = 0; k < 4; k++) {
+							line.intersects(rect[k], over);
+							if (Double.isNaN(over.x)) {
+								overlay = true;
+								break;
+							}
+						}
+
+						if (!overlay) {
+							shrink(rect, line, intersection);
+							//retry
+							j = 5;
+							i = roofLines.size();
+						}
 					}
 				}
 			}
 			foundRec = true;
 		}
 
-		//calculate 
-		return 0;
+		//calculate diagonal
+		rect[0].vector.x += rect[1].vector.x;
+		rect[0].vector.y += rect[1].vector.y;
+		return rect[0].magnitude();
 	}
 
-	private static void shrink(Line[] rec, double factor) {
-		for (int i = 0; i < 4; i++) {
-			rec[0].vector.x -= factor;
-			rec[0].vector.y -= factor;
-			rec[1].start.x = rec[0].start.x + rec[0].vector.x;
-			rec[1].start.y = rec[0].start.y + rec[0].vector.y;
-			rec[2].start.x = rec[3].start.x + rec[3].vector.x;
-			rec[2].start.y = rec[3].start.y + rec[3].vector.y;
+	private static void shrink(Line[] rect, Line line, Point intersection) {
+		//calculate shrink factor
+		Point p1 = line.start;
+		Point p2 = new Point(line.start.x + line.vector.x, line.start.y + line.vector.y);
+		double factor = 0;
+
+		if (p1.mdist(rect[0].start) > p2.mdist(rect[0].start)) {
+			factor = p1.y - intersection.y > 0 ? p1.y - intersection.y : p1.x - intersection.x;
+		} else {
+			factor = p2.y - intersection.y > 0 ? p2.y - intersection.y : p2.x - intersection.x;
 		}
+
+		for (int i = 0; i < 4; i++) {
+			rect[i].vector.x = rect[i].vector.x == 0 ? 0 : rect[i].vector.x - factor;
+			rect[i].vector.y -= rect[i].vector.y == 0 ? 0 : rect[i].vector.y - factor;
+		}
+
+		rect[1].start.x = rect[0].start.x + rect[0].vector.x;
+		rect[1].start.y = rect[0].start.y + rect[0].vector.y;
+		rect[2].start.x = rect[3].start.x + rect[3].vector.x;
+		rect[2].start.y = rect[3].start.y + rect[3].vector.y;
 
 	}
 
@@ -138,53 +162,31 @@ public class Rooftop {
 		}
 
 		public int intersects(Line l, Point intersection) {
-			//			double sx = p2.x - p1.x;
-			//			double sy = p2.y - p1.y;
-			//			double tx = -(l.p2.x - l.p1.x);
-			//			double ty = -(l.p2.y - l.p1.y);
-			//
-			//			double sm = p1.y - p1.x;
-			//			double tm = l.p1.y - l.p1.x;
-			//
-			//			double main = sx * (ty) - sy * tx;
-			//			double minort = tx * tm - ty * sm;
-			//			double minors = sx * tm - sy * sm;
-			//
-			//			double s1 = -minort / main;
-			//			double t1 = minors / main;
-			//
-			//			if (s1 > 1.0 || s1 < 0.0 || t1 > 1.0 || t1 < 0.0)
-			//				return -1;
-			//			else if (s1 == 0.0 || s1 == 1.0 || t1 == 0 || t1 == 1.0)
-			//				return 0;
-			//			else
-			//				return 1;
+			//						double sx = p2.x - p1.x;	//this.vector
+			//						double sy = p2.y - p1.y;
+			//						double tx = -(l.p2.x - l.p1.x); //l.vector
+			//						double ty = -(l.p2.y - l.p1.y);
 
-			return 0;
+			double sm = start.y - start.x;
+			double tm = l.start.y - l.start.x;
 
-		}
-	}
+			double main = vector.x * l.vector.y - vector.y * l.vector.x;
+			double minort = l.vector.x * tm - l.vector.y * sm;
+			double minors = vector.x * tm - vector.y * sm;
 
-	public class OrderedList<T extends Comparable<T>> extends LinkedList<T> {
+			double s1 = -minort / main;
+			double t1 = minors / main;
 
-		private static final long serialVersionUID = 1L;
+			intersection.x = start.x + vector.x * s1;
+			intersection.y = start.y + vector.y * s1;
 
-		public boolean orderedAdd(T element) {
-			ListIterator<T> itr = listIterator();
-			while (true) {
-				if (itr.hasNext() == false) {
-					itr.add(element);
-					return true;
-				}
+			if (s1 > 1.0 || s1 < 0.0 || t1 > 1.0 || t1 < 0.0)
+				return -1;
+			else if (s1 == 0.0 || s1 == 1.0 || t1 == 0 || t1 == 1.0)
+				return 0;
+			else
+				return 1;
 
-				T elementInList = itr.next();
-				if (elementInList.compareTo(element) > 0) {
-					itr.previous();
-					itr.add(element);
-					System.out.println("Adding");
-					return true;
-				}
-			}
 		}
 	}
 
