@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 public class Rooftop {
 
-	//static ArrayList<Line> roof;
-	static LinkedList<Point> building;
+	static ArrayList<Point> roof;
+	static ArrayList<Line> roofLines;
 
 	private static void read() throws FileNotFoundException {
 		Scanner in = new Scanner(new File("rooftop_test.in"));
@@ -26,135 +26,84 @@ public class Rooftop {
 
 	public static void main(String[] args) throws Exception {
 		read();
+		double superSize = 1000;
 
-		sweep();
-	}
-
-	private static void sweep() {
-		OrderedList<Point> cornerPoints = null;
-		ArrayList<Line> roof = new ArrayList<>();
-		ArrayList<Line> preliminaryRoof = new ArrayList<>();
-
-		while (cornerPoints.size() > 0) {
-			Point p = cornerPoints.pop();
-
-			if (p.isRoofPoint) {
-
-			} else {
-				Line newRoof = null;
-				if (p.isCounterClockWise()) {
-
-				} else {
-
-				}
-				checkNewRoof(newRoof, roof, preliminaryRoof, cornerPoints);
-			}
-
-		}
-
-		//look for highest roof
-		double max = 0;
+		double minDiagonal = Double.MAX_VALUE;
 		for (int i = 0; i < roof.size(); i++) {
-			if (roof.get(i).isDiagonal) {
-				double magnitude = roof.get(i).magnitude();
-				if (magnitude > max)
-					max = magnitude;
-			}
+			//is counter clock wise
+			//one size
+			//twice
 		}
 
 	}
 
-	private static void checkNewRoof(Line l, ArrayList<Line> roof, ArrayList<Line> preliminaryRoof, OrderedList<Point> cornerPoints) {
-		boolean foundIntersection = false;
-		//check for intersection
-		for (int i = 0; i < preliminaryRoof.size(); i++) {
-			Line other = preliminaryRoof.get(i);
-			int intersects = other.intersects(l);
-			if (intersects == 1) {
-				Point intersection = null;
+	private static double makeRectangle(int pointIndex, Line startLine) {
+		Point current;
+		Line[] rect = new Line[4];
+		boolean foundRec = false;
 
-				//get intersection point
-				Point interP = null;
-				other.end = interP;
-				l.end = interP;
+		while (!foundRec) {
 
-				//add both rooflines to roof
-				roof.add(other);
-				roof.add(l);
-				preliminaryRoof.remove(other);
-				cornerPoints.orderedAdd(interP);
-				foundIntersection = true;
-				break;
-			}
-		}
+			for (int i = 0; i < roofLines.size(); i++) {
+				for (int j = 0; j < 4; j++) {
+					Line line = roofLines.get(i);
+					Point intersection = new Point(0, 0);
+					int inters = line.intersects(rect[j], intersection);
+					if (inters == -1 && !Double.isInfinite(intersection.x)) {
+						//calculate shrink factor
+						Point p1 = line.start;
+						Point p2 = new Point(line.start.x + line.vector.x, line.start.y + line.vector.y);
+						double factor = 0;
 
-		boolean foundTouch = false;
-		if (!foundIntersection) {
-			for (int i = 0; i < roof.size(); i++) {
-				int touches = roof.get(i).intersects(l);
-				if (touches == 0) {
-					foundTouch = true;
+						if (p1.mdist(rect[0].start) > p2.mdist(rect[0].start)) {
+							factor = p1.y - intersection.y > 0 ? p1.y - intersection.y : p1.x - intersection.x;
+						} else {
+							factor = p2.y - intersection.y > 0 ? p2.y - intersection.y : p2.x - intersection.x;
+						}
 
-					Point touchPoint = null;
-					l.end = touchPoint;
-					roof.add(l);
-					break;
+						shrink(rect, factor);
+
+						//retry
+						j = 5;
+						i = roofLines.size();
+					}
 				}
 			}
+			foundRec = true;
 		}
 
-		if (!foundIntersection && !foundTouch)
-			preliminaryRoof.add(l);
+		//calculate 
+		return 0;
 	}
 
-	private static Line newRoof(Point before, Point current, Point after) {
+	private static void shrink(Line[] rec, double factor) {
+		for (int i = 0; i < 4; i++) {
+			rec[0].vector.x -= factor;
+			rec[0].vector.y -= factor;
+			rec[1].start.x = rec[0].start.x + rec[0].vector.x;
+			rec[1].start.y = rec[0].start.y + rec[0].vector.y;
+			rec[2].start.x = rec[3].start.x + rec[3].vector.x;
+			rec[2].start.y = rec[3].start.y + rec[3].vector.y;
+		}
 
-		return null;
 	}
 
-	public static class Point implements Comparable<Point> {
-		double x;
-		double y;
-		Point before;
-		Point after;
-		boolean isRoofPoint;
-		boolean isHorizontal;
-
-		public Point(double x, double y) {
-			this.x = x;
-			this.y = y;
-			isRoofPoint = false;
-		}
-
-		public Point(double x, double y, boolean isRoofPoint) {
-			this.isRoofPoint = isRoofPoint;
-			this.x = x;
-			this.y = y;
-		}
-
-		public boolean isCounterClockWise() {
-			return false;
-		}
-
-		@Override
-		public int compareTo(Point o) {
-			int comp = Double.compare(x, o.x);
-
-			return comp == 0 ? Double.compare(y, o.y) : comp;
-		}
-
+	public static double calcAngle(Point a, Point b, Point c) {
+		double alpha = Math.atan2(a.x - b.x, a.y - b.y);
+		double beta = Math.atan2(c.x - b.x, c.y - b.y);
+		return beta - alpha;
 	}
 
 	public static class Line {
 		Point start;
-		Point end;
+		Point vector;
 		boolean isDiagonal;
 
 		public double magnitude() {
 			return 0;
 		}
 
-		public int intersects(Line l) {
+		public int intersects(Line l, Point intersection) {
 			//			double sx = p2.x - p1.x;
 			//			double sy = p2.y - p1.y;
 			//			double tx = -(l.p2.x - l.p1.x);
@@ -204,4 +153,5 @@ public class Rooftop {
 			}
 		}
 	}
+
 }
