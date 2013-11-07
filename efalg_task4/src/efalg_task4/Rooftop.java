@@ -32,6 +32,11 @@ public class Rooftop {
 
 		int size = roof.size();
 
+		Line l1 = new Line(new Point(0, 0), new Point(5, 0));
+		Line l2 = new Line(new Point(2, 2), new Point(2, -2));
+		Point inters = new Point(0, 0);
+		l1.intersects(l2, inters);
+
 		double minDiagonal = Double.MAX_VALUE;
 		for (int i = 0; i < roof.size(); i++) {
 			Point current = roof.get(i);
@@ -43,24 +48,25 @@ public class Rooftop {
 				//counter clock wise
 				Line l = new Line(current, next);
 
-				currentDiag = makeMaxRectangle(0, l);
+				currentDiag = makeMaxRectangle(l);
 
 			} else {
-				//clockwise, do it twice
+				//if clockwise, shift and do it twice
 				System.out.println("clockwise");
 				//l.vector.x *= superSize;
 				//l.vector.y *= superSize;
 			}
 
-			//is counter clock wise
-			//one size
-			//twice
+			if (minDiagonal > currentDiag)
+				minDiagonal = currentDiag;
 
 		}
 
+		System.out.println(minDiagonal);
+
 	}
 
-	private static double makeMaxRectangle(int pointIndex, Line startLine) {
+	private static double makeMaxRectangle(Line startLine) {
 		Point current;
 		Point ps1 = new Point(startLine.start.x + startLine.vector.x, startLine.start.y + startLine.vector.y);
 		Point ps3 = new Point(startLine.start.x + -1 * startLine.vector.y, startLine.start.y + startLine.vector.x);
@@ -74,10 +80,10 @@ public class Rooftop {
 		boolean foundRec = false;
 
 		while (!foundRec) {
-
 			for (int i = 0; i < roofLines.size(); i++) {
+				Line line = roofLines.get(i);
+
 				for (int j = 0; j < 4; j++) {
-					Line line = roofLines.get(i);
 					Point intersection = new Point(0, 0);
 					int inters = line.intersects(rect[j], intersection);
 					if (inters > 0 && !Double.isNaN(intersection.x)) {
@@ -93,7 +99,7 @@ public class Rooftop {
 						Point over = new Point(0, 0);
 						for (int k = 0; k < 4; k++) {
 							line.intersects(rect[k], over);
-							if (Double.isNaN(over.x)) {
+							if (Double.isNaN(over.x) || Double.isNaN(over.y)) {
 								overlay = true;
 								break;
 							}
@@ -106,6 +112,7 @@ public class Rooftop {
 							i = roofLines.size();
 						}
 					}
+
 				}
 			}
 			foundRec = true;
@@ -150,7 +157,6 @@ public class Rooftop {
 	public static class Line {
 		Point start;
 		Point vector;
-		boolean isDiagonal;
 
 		public Line(Point start, Point end) {
 			this.start = start;
@@ -167,25 +173,34 @@ public class Rooftop {
 			//						double tx = -(l.p2.x - l.p1.x); //l.vector
 			//						double ty = -(l.p2.y - l.p1.y);
 
-			double sm = start.y - start.x;
-			double tm = l.start.y - l.start.x;
+			/*
+			 * double tx = -l.vector.x; double ty = -l.vector.y;
+			 * 
+			 * double sm = start.y - start.x; double tm = l.start.y - l.start.x;
+			 * 
+			 * double main = vector.x * ty - vector.y * tx; double minort = tx *
+			 * tm - ty * sm; double minors = vector.x * tm - vector.y * sm;
+			 * 
+			 * double s1 = -minort / main; double t1 = minors / main;
+			 * 
+			 * intersection.x = start.x + vector.x * s1; intersection.y =
+			 * start.y + vector.y * s1;
+			 * 
+			 * if (s1 > 1.0 || s1 < 0.0 || t1 > 1.0 || t1 < 0.0) return -1; else
+			 * if (s1 == 0.0 || s1 == 1.0 || t1 == 0 || t1 == 1.0) return 0;
+			 * else return 1;
+			 */
 
-			double main = vector.x * l.vector.y - vector.y * l.vector.x;
-			double minort = l.vector.x * tm - l.vector.y * sm;
-			double minors = vector.x * tm - vector.y * sm;
-
-			double s1 = -minort / main;
-			double t1 = minors / main;
-
-			intersection.x = start.x + vector.x * s1;
-			intersection.y = start.y + vector.y * s1;
-
-			if (s1 > 1.0 || s1 < 0.0 || t1 > 1.0 || t1 < 0.0)
-				return -1;
-			else if (s1 == 0.0 || s1 == 1.0 || t1 == 0 || t1 == 1.0)
-				return 0;
-			else
-				return 1;
+			Point p1 = this.start;
+			Point p2 = new Point(start.x + vector.x, start.y + vector.y);
+			Point p3 = l.start;
+			Point p4 = new Point(l.start.x + l.vector.x, l.start.y + l.vector.y);
+			double x = (p1.x * p2.y - p1.y * p2.x) * (p3.x - p4.x) - (p1.x - p2.x) * (p3.x * p4.y - p3.y * p4.x);
+			double y = (p1.x * p2.y - p1.y * p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x * p4.y - p3.y * p4.x);
+			double divisor = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
+			intersection.x = x / divisor;
+			intersection.y = y / divisor;
+			return new Point(x / divisor, y / divisor);
 
 		}
 	}

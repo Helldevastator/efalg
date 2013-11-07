@@ -1,4 +1,3 @@
-
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -38,6 +37,10 @@ public class Heuberger {
 
 	public static void main(String[] args) throws Exception {
 		read();
+
+		Line l1 = new Line(new Point(-1, 1), new Point(3, 3));
+		Line l2 = new Line(new Point(1, -1), new Point(4, 6));
+		int bla = l1.intersects(l2);
 
 		HashSet<Line> visible = new HashSet<>();
 		checkHalf(visible, true);
@@ -129,7 +132,7 @@ public class Heuberger {
 			double sm = p1.y - p1.x;
 			double tm = l.p1.y - l.p1.x;
 
-			double main = sx * (ty) - sy * tx;
+			double main = sx * ty - sy * tx;
 			double minort = tx * tm - ty * sm;
 			double minors = sx * tm - sy * sm;
 
