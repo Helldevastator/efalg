@@ -57,8 +57,8 @@ public class SmallestRectangle {
 			}
 
 			// turn smallest line
-			currentRectangle[index].turnLine(convexHull.get(hullIndices[index]));
 			hullIndices[index] = (hullIndices[index] + 1) % size;
+			currentRectangle[index].rotateLine(convexHull.get(hullIndices[index]));
 
 			// turn other lines
 			for (int i = 0; i < 4; i++) {

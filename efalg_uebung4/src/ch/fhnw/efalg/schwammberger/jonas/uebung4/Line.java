@@ -50,9 +50,9 @@ public class Line {
 	 * 
 	 * @param p
 	 */
-	public void turnLine(Point2D p) {
-		this.v = new Vector(this.p, p);
-		this.p = (Point) p.clone();
+	public void rotateLine(Point2D point) {
+		this.v = new Vector(point, this.p);
+		this.p = (Point) point.clone();
 	}
 
 	/**
