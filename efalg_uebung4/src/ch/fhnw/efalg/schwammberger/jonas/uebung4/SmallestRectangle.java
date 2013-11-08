@@ -46,10 +46,12 @@ public class SmallestRectangle {
 			for (int i = 0; i < 4; i++) {
 				int nextIndex = (hullIndices[i] + 1) % size;
 				double currentAngle = currentRectangle[i].calculateAngle(convexHull.get(nextIndex));
+
 				System.out.println(Math.toDegrees(currentAngle));
 				System.out.println(convexHull.get(nextIndex));
 				System.out.println(currentRectangle[i].toString());
 				System.out.println("--------------------------------");
+
 				if (Math.abs(smallestAngle) > Math.abs(currentAngle)) {
 					smallestAngle = currentAngle;
 					index = i;

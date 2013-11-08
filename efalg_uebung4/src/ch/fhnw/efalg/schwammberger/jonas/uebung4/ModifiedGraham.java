@@ -10,8 +10,7 @@ import java.util.List;
  * minimum convex hull. Read the MODIFICATION comment in the graham() method for
  * more information.
  * 
- * @author Jon
- * 
+ * @author Jon §
  */
 public class ModifiedGraham {
 	private ArrayList<HelperPoint> helperP;
