@@ -53,10 +53,8 @@ public class VectorSpaceSearch {
 	 * @param weights
 	 *            List of weights for each word
 	 */
-	public PriorityQueue<SearchResult> search(List<String> words,
-			List<Integer> weights) {
-		PriorityQueue<SearchResult> res = new PriorityQueue<>(docs.size(),
-				Collections.reverseOrder());
+	public PriorityQueue<SearchResult> search(List<String> words, List<Integer> weights) {
+		PriorityQueue<SearchResult> res = new PriorityQueue<>(docs.size(), Collections.reverseOrder());
 		Vector searchV = new Vector(dic.getWordCount());
 
 		// init vector
@@ -68,8 +66,7 @@ public class VectorSpaceSearch {
 			// check if word does exist
 			if (pos != null)
 				// calculate idf
-				searchV.setPos(pos,
-						(Math.log(weights.get(i)) / Math.log(2) + 1) * idf);
+				searchV.setPos(pos, (Math.log(weights.get(i)) / Math.log(2) + 1) * idf);
 
 		}
 		searchV.convetToUnitVector();
@@ -99,7 +96,7 @@ public class VectorSpaceSearch {
 
 		/**
 		 * 
-		 * @return document
+		 * @return document which was found
 		 */
 		public Document getDoc() {
 			return doc;
@@ -123,7 +120,6 @@ public class VectorSpaceSearch {
 	 * Print heaps law on the console
 	 */
 	public void printHeapsLaw() {
-		System.out.println("Heaps Law Statistics: "
-				+ this.dic.calculateHeapsLaw());
+		System.out.println("Heaps Law Statistics: " + this.dic.calculateHeapsLaw());
 	}
 }
