@@ -1,6 +1,7 @@
 package ch.fhnw.efalg.schwammberger.jonas.uebung4;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 
 /**
  * Represents an infinite line
@@ -9,7 +10,7 @@ import java.awt.Point;
  * 
  */
 public class Line {
-	private Point p;
+	private Point2D p;
 	private Vector v;
 
 	public Line(Point p, Vector v) {
@@ -23,7 +24,7 @@ public class Line {
 	 * @param l
 	 */
 	public Line(Line l) {
-		p = (Point) l.p.clone();
+		p = (Point2D) l.p.clone();
 		v = new Vector(l.v);
 	}
 
@@ -34,8 +35,14 @@ public class Line {
 	 * @return angle in radiant
 	 */
 	public double calculateAngle(Point p1) {
-		Vector rp1 = new Vector(p1, p);
-		return v.getAngle(rp1);
+		Point2D p2 = new Point2D.Double(p.getX() + v.getX(), p.getY() + v.getY());
+		return calcAngle(p2, this.p, p1);
+	}
+
+	private static double calcAngle(Point2D a, Point2D b, Point2D c) {
+		double alpha = Math.atan2(a.getX() - b.getX(), a.getY() - b.getY());
+		double beta = Math.atan2(c.getX() - b.getX(), c.getY() - b.getY());
+		return beta - alpha;
 	}
 
 	/**
@@ -43,17 +50,19 @@ public class Line {
 	 * 
 	 * @param p
 	 */
-	public void turnLine(Point p) {
+	public void turnLine(Point2D p) {
 		this.v = new Vector(this.p, p);
 		this.p = (Point) p.clone();
 	}
 
 	/**
+	 * Rotate this line arount p with angle
 	 * 
 	 * @param angle
+	 *            in radiants
 	 */
-	public void turnLine(double angle) {
-
+	public void rotateLine(double angle) {
+		this.v.rotate(angle);
 	}
 
 	/**
@@ -127,6 +136,6 @@ public class Line {
 
 	@Override
 	public String toString() {
-		return "Line([x=" + p.x + ",y=" + p.y + "]" + v.toString() + ")";
+		return "Line([x=" + p.getX() + ",y=" + p.getY() + "]" + v.toString() + ")";
 	}
 }

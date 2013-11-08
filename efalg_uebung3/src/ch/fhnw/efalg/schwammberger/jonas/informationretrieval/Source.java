@@ -10,9 +10,10 @@ public class Source {
 		//VectorSpaceSearch s = new VectorSpaceSearch("debugfiles");
 		VectorSpaceSearch s = new VectorSpaceSearch("testfiles");
 
+		System.out.print("Enter search query:");
 		Scanner in = new Scanner(System.in);
 		ArrayList<String> words = new ArrayList<>();
-		;
+
 		ArrayList<Integer> wordCount = new ArrayList<>();
 		analyzeInput(in.nextLine(), words, wordCount);
 

@@ -63,7 +63,7 @@ public class SmallestRectangle {
 			// turn other lines
 			for (int i = 0; i < 4; i++) {
 				if (i != index)
-					currentRectangle[i].turnLine(smallestAngle);
+					currentRectangle[i].rotateLine(smallestAngle);
 			}
 
 			totalAngle += smallestAngle;
@@ -118,6 +118,8 @@ public class SmallestRectangle {
 	}
 
 	public static void main(String[] args) {
+		//Line l = new Line(new Point(0, 0), new Vector(1, 0));
+		//l.calculateAngle(new Point(0, 5));
 		ArrayList<Point> points = new ArrayList<>();
 		points.add(new Point(0, 5));
 		points.add(new Point(5, 5));

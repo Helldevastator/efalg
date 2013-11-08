@@ -1,6 +1,6 @@
 package ch.fhnw.efalg.schwammberger.jonas.uebung4;
 
-import java.awt.Point;
+import java.awt.geom.Point2D;
 
 /**
  * Represents a two dimensional vector
@@ -9,12 +9,12 @@ import java.awt.Point;
  * 
  */
 public class Vector {
-	private final double x;
-	private final double y;
+	private double x;
+	private double y;
 
-	public Vector(Point p0, Point p1) {
-		x = p0.x - p1.x;
-		y = p0.y - p1.y;
+	public Vector(Point2D p, Point2D p2) {
+		x = p.getX() - p2.getX();
+		y = p.getY() - p2.getY();
 	}
 
 	/**
@@ -62,9 +62,24 @@ public class Vector {
 		return Math.acos(dot / mag);
 	}
 
+	public void rotate(double angle) {
+		double newX = this.x * Math.cos(angle) - this.y * Math.sin(angle);
+		double newY = this.y * Math.sin(angle) + this.x * Math.cos(angle);
+		this.x = newX;
+		this.y = newY;
+	}
+
 	@Override
 	public String toString() {
 		return "Vector[vx=" + x + ",vy=" + y + "]";
+	}
+
+	public double getX() {
+		return this.x;
+	}
+
+	public double getY() {
+		return this.y;
 	}
 
 }
