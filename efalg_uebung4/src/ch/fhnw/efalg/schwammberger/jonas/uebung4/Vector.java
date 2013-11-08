@@ -49,19 +49,6 @@ public class Vector {
 		return x * v.y - v.x * y;
 	}
 
-	/**
-	 * 
-	 * @param v
-	 * @return angle in radiants
-	 */
-	public double getAngle(Vector v) {
-		double dot;
-		dot = x * v.x + y * v.y;
-		double mag = this.calculateMagnitude() * v.calculateMagnitude();
-
-		return Math.acos(dot / mag);
-	}
-
 	public void rotate(double angle) {
 		double newX = this.x * Math.cos(angle) - this.y * Math.sin(angle);
 		double newY = this.y * Math.sin(angle) + this.x * Math.cos(angle);
