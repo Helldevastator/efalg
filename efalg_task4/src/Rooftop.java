@@ -1,5 +1,3 @@
-package efalg_task4;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -42,7 +40,8 @@ public class Rooftop {
 		double result = calculateDemsSquares() / 2;
 		//System.out.println(System.nanoTime() - start);
 		//System.out.println(result);
-		out.print(result);
+		out.println(result);
+		out.close();
 	}
 
 	public static double calculateDemsSquares() {
