@@ -10,6 +10,7 @@ import java.awt.geom.Point2D;
  * 
  */
 public class Line {
+	private static double doublePI = Math.PI * 2;
 	private Point2D p;
 	private Vector v;
 
@@ -32,7 +33,7 @@ public class Line {
 	 * get the angle which this line has to be turned in order to go through p1
 	 * 
 	 * @param p1
-	 * @return angle in radiant
+	 * @return absolute angle in radiant
 	 */
 	public double calculateAngle(Point p1) {
 		Point2D p2 = new Point2D.Double(p.getX() + v.getX(), p.getY() + v.getY());
@@ -42,6 +43,8 @@ public class Line {
 	private static double calcAngle(Point2D a, Point2D b, Point2D c) {
 		double alpha = Math.atan2(a.getX() - b.getX(), a.getY() - b.getY());
 		double beta = Math.atan2(c.getX() - b.getX(), c.getY() - b.getY());
+		System.out.println(Math.toDegrees(alpha));
+		System.out.println(Math.toDegrees(beta));
 		return beta - alpha;
 	}
 

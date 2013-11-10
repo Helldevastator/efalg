@@ -41,7 +41,7 @@ public class SmallestRectangle {
 		// set minimum
 		while (totalAngle < Math.PI / 2) {
 			// find line with smallest turning angle
-			double smallestAngle = Double.MAX_VALUE;
+			double smallestAngle = Double.MAX_VALUE; //absolute smallest angle
 			int index = 0;
 			for (int i = 0; i < 4; i++) {
 				int nextIndex = (hullIndices[i] + 1) % size;
@@ -52,7 +52,7 @@ public class SmallestRectangle {
 				System.out.println(currentRectangle[i].toString());
 				System.out.println("--------------------------------");
 
-				if (Math.abs(smallestAngle) > Math.abs(currentAngle)) {
+				if (smallestAngle > currentAngle) {
 					smallestAngle = currentAngle;
 					index = i;
 				}

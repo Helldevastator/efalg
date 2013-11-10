@@ -42,6 +42,7 @@ public class PointsPanel extends JPanel {
 		for (Point p : points) {
 			g.drawRect(p.x, p.y, 1, 1);
 		}
+		super.repaint();
 		//g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 	}
