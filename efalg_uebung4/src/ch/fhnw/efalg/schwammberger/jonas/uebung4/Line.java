@@ -38,19 +38,6 @@ public class Line {
 	public double calculateAngle(Point p1) {
 		Vector v1 = new Vector(p1, this.p);
 		return this.v.calculateAngle(v1);
-
-		/*
-		 * Point2D p2 = new Point2D.Double(p.getX() + v.getX(), p.getY() +
-		 * v.getY()); return calcAngle(p2, this.p, p1);
-		 */
-	}
-
-	private static double calcAngle(Point2D a, Point2D b, Point2D c) {
-		double alpha = Math.atan2(a.getY() - b.getY(), a.getX() - b.getX());
-		double beta = Math.atan2(c.getY() - b.getY(), c.getX() - b.getX());
-
-		System.out.println(Math.toDegrees(alpha - beta) + ", alpha:" + Math.toDegrees(alpha) + " beta:" + Math.toDegrees(beta));
-		return beta - alpha;
 	}
 
 	/**
@@ -77,26 +64,38 @@ public class Line {
 	 * Get the intersection point with this line
 	 * 
 	 * @param l
-	 * @return
+	 * @return Point with Integer numbers as
 	 */
 	public Point calculateIntersectionPoint(Line l) {
 		Vector s = this.v;
-		Vector t;
+		Vector t = new Vector(-l.v.getX(), -l.v.getY());
 
-		/*
-		 * int sx = p2.x - p1.x; int sy = p2.y - p1.y; int tx = -(l.p2.x -
-		 * l.p1.x); int ty = -(l.p2.y - l.p1.y);
-		 * 
-		 * int sm = p1.y - p1.x; int tm = l.p1.y - l.p1.x;
-		 * 
-		 * int main = sx * (ty) - sy * tx; int minort = tx * tm - ty * sm; int
-		 * minors = sx * tm - sy * sm;
-		 * 
-		 * double s1 = -(double) minort / main; double t1 = (double) minors /
-		 * main;
-		 */
+		double sm = p.getY() - p.getX();
+		double tm = l.p.getY() - l.p.getY();
+		double minorT = t.getX() * tm - t.getY() * sm;
+		double major = s.getX() * t.getY() - s.getY() * t.getY();
 
-		return null;
+		double s1 = -minorT / major;
+
+		return new Point((int) (this.p.getX() + s1 * s.getX()), (int) (this.p.getY() + s1 * s.getY()));
+	}
+
+	/**
+	 * Calculates the distance between this line and par. to this.
+	 * 
+	 * @param par
+	 *            has to be parallel to this
+	 * @return
+	 */
+	private double getDistanceParallel(Line par) {
+		Vector g0 = new Vector(p, par.p);
+
+		return Math.abs(v.cross(g0) / v.calculateMagnitude());
+	}
+
+	@Override
+	public String toString() {
+		return "Line([x=" + p.getX() + ",y=" + p.getY() + "]" + v.toString() + ")";
 	}
 
 	/**
@@ -117,9 +116,9 @@ public class Line {
 	 * @param b
 	 *            is parallel to d
 	 * @param c
-	 *            is
+	 * 
 	 * @param d
-	 *            is
+	 * 
 	 * @return
 	 */
 	public static double calculateRectangleArea(Line a, Line b, Line c, Line d) {
@@ -130,20 +129,23 @@ public class Line {
 	}
 
 	/**
-	 * Calculates the distance between this line and par. par has to be parallel
-	 * to this.
+	 * Calculates the vertices of a rectangle
 	 * 
-	 * @param par
-	 * @return
+	 * @param rec
+	 *            Array of 4 lines representing a rectangle rec[0] is parallel
+	 *            to rec[2], rec[1] to rec[3]
+	 * @return the 4 Vertices of this rectangle represented in integer
+	 *         coordinates;
 	 */
-	private double getDistanceParallel(Line par) {
-		Vector g0 = new Vector(p, par.p);
+	public static Point[] calculateVertices(Line[] rec) {
+		Point[] out = new Point[4];
 
-		return Math.abs(v.cross(g0) / v.calculateMagnitude());
+		out[0] = rec[0].calculateIntersectionPoint(rec[1]);
+		out[1] = rec[1].calculateIntersectionPoint(rec[2]);
+		out[2] = rec[2].calculateIntersectionPoint(rec[3]);
+		out[3] = rec[3].calculateIntersectionPoint(rec[0]);
+
+		return out;
 	}
 
-	@Override
-	public String toString() {
-		return "Line([x=" + p.getX() + ",y=" + p.getY() + "]" + v.toString() + ")";
-	}
 }

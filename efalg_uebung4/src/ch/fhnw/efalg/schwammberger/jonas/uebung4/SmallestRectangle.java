@@ -120,8 +120,6 @@ public class SmallestRectangle {
 	}
 
 	public static void main(String[] args) {
-		//Line l = new Line(new Point(0, 0), new Vector(1, 0));
-		//l.calculateAngle(new Point(0, 5));
 		ArrayList<Point> points = new ArrayList<>();
 		points.add(new Point(0, 5));
 		points.add(new Point(5, 5));
@@ -129,12 +127,12 @@ public class SmallestRectangle {
 		points.add(new Point(10, 5));
 		points.add(new Point(5, 10));
 
-		Vector v1 = new Vector(0, -1);
-		v1.rotate(Math.PI / 4);
-
 		SmallestRectangle rec = new SmallestRectangle(points);
 
 		Line[] l = rec.calculateSmallestRectangle();
+		Point[] bla = Line.calculateVertices(l);
+		for (int i = 0; i < 4; i++)
+			System.out.println(bla[i]);
 	}
 
 }
