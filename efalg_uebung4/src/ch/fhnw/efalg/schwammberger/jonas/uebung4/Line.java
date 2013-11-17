@@ -36,8 +36,13 @@ public class Line {
 	 * @return
 	 */
 	public double calculateAngle(Point p1) {
-		Point2D p2 = new Point2D.Double(p.getX() + v.getX(), p.getY() + v.getY());
-		return calcAngle(p2, this.p, p1);
+		Vector v1 = new Vector(p1, this.p);
+		return this.v.calculateAngle(v1);
+
+		/*
+		 * Point2D p2 = new Point2D.Double(p.getX() + v.getX(), p.getY() +
+		 * v.getY()); return calcAngle(p2, this.p, p1);
+		 */
 	}
 
 	private static double calcAngle(Point2D a, Point2D b, Point2D c) {

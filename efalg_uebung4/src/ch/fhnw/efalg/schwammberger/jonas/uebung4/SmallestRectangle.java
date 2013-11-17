@@ -19,6 +19,11 @@ public class SmallestRectangle {
 		this.convexHull = graham.calculateMinConvexHull(points);
 	}
 
+	/**
+	 * Calculates the smallest rectangle of the given points
+	 * 
+	 * @return
+	 */
 	public Line[] calculateSmallestRectangle() {
 		Line[] minRectangle = new Line[4];
 		Line[] currentRectangle = new Line[4];
@@ -27,29 +32,25 @@ public class SmallestRectangle {
 		double minArea;
 		double totalAngle = 0;
 
+		//initialize
 		minRectangle[0] = new Line(convexHull.get(hullIndices[0]), new Vector(1, 0)); // lower horizontal line
 		minRectangle[1] = new Line(convexHull.get(hullIndices[1]), new Vector(0, -1)); // left vertical line
 		minRectangle[2] = new Line(convexHull.get(hullIndices[2]), new Vector(-1, 0)); // top horizontal line
 		minRectangle[3] = new Line(convexHull.get(hullIndices[3]), new Vector(0, 1)); // right vertical line
-
 		minArea = Line.calculateRectangleArea(minRectangle);
 
 		// copy
 		for (int i = 0; i < 4; i++)
 			currentRectangle[i] = new Line(minRectangle[i]);
 
-		// set minimum
+		//find minimum
 		while (totalAngle < Math.PI / 2) {
 			// find line with smallest turning angle
-			double smallestAngle = Double.MAX_VALUE; //absolute smallest angle
+			double smallestAngle = Double.MAX_VALUE;
 			int index = 0;
 			for (int i = 0; i < 4; i++) {
 				int nextIndex = (hullIndices[i] + 1) % size;
 				double currentAngle = currentRectangle[i].calculateAngle(convexHull.get(nextIndex));
-
-				System.out.println(convexHull.get(nextIndex));
-				System.out.println(currentRectangle[i].toString());
-				System.out.println("--------------------------------");
 
 				if (Math.abs(smallestAngle) > Math.abs(currentAngle)) {
 					smallestAngle = currentAngle;
@@ -70,10 +71,6 @@ public class SmallestRectangle {
 			totalAngle += Math.abs(smallestAngle);
 			double currentArea = Line.calculateRectangleArea(currentRectangle);
 
-			System.out.println(currentArea);
-			System.out.println(Math.toDegrees(totalAngle));
-			System.out.println("======================================");
-			System.out.println();
 			if (currentArea < minArea) {
 				minArea = currentArea;
 

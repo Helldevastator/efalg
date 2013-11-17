@@ -12,9 +12,17 @@ public class Vector {
 	private double x;
 	private double y;
 
-	public Vector(Point2D p, Point2D p2) {
-		x = p.getX() - p2.getX();
-		y = p.getY() - p2.getY();
+	/**
+	 * create a new vector from startPoint to endpoint
+	 * 
+	 * @param endPoint
+	 *            end point
+	 * @param startPoint
+	 *            start point
+	 */
+	public Vector(Point2D endPoint, Point2D startPoint) {
+		x = endPoint.getX() - startPoint.getX();
+		y = endPoint.getY() - startPoint.getY();
 	}
 
 	/**
@@ -54,6 +62,19 @@ public class Vector {
 		double newY = this.x * Math.sin(angle) + this.y * Math.cos(angle);
 		this.x = newX;
 		this.y = newY;
+	}
+
+	/**
+	 * Calculate angle between this and vector v1
+	 * 
+	 * @param v1
+	 * @return angle in radiant
+	 */
+	public double calculateAngle(Vector v1) {
+		//dot product
+		double theta = (x * v1.x + y * v1.y) / (this.calculateMagnitude() * v1.calculateMagnitude());
+
+		return Math.acos(theta);
 	}
 
 	@Override
