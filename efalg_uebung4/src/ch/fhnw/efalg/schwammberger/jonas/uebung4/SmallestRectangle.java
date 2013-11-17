@@ -47,12 +47,11 @@ public class SmallestRectangle {
 				int nextIndex = (hullIndices[i] + 1) % size;
 				double currentAngle = currentRectangle[i].calculateAngle(convexHull.get(nextIndex));
 
-				System.out.println(Math.toDegrees(currentAngle));
 				System.out.println(convexHull.get(nextIndex));
 				System.out.println(currentRectangle[i].toString());
 				System.out.println("--------------------------------");
 
-				if (smallestAngle > currentAngle) {
+				if (Math.abs(smallestAngle) > Math.abs(currentAngle)) {
 					smallestAngle = currentAngle;
 					index = i;
 				}
@@ -68,9 +67,13 @@ public class SmallestRectangle {
 					currentRectangle[i].rotateLine(smallestAngle);
 			}
 
-			totalAngle += smallestAngle;
+			totalAngle += Math.abs(smallestAngle);
 			double currentArea = Line.calculateRectangleArea(currentRectangle);
 
+			System.out.println(currentArea);
+			System.out.println(Math.toDegrees(totalAngle));
+			System.out.println("======================================");
+			System.out.println();
 			if (currentArea < minArea) {
 				minArea = currentArea;
 
@@ -128,6 +131,10 @@ public class SmallestRectangle {
 		points.add(new Point(5, 0));
 		points.add(new Point(10, 5));
 		points.add(new Point(5, 10));
+
+		Vector v1 = new Vector(0, -1);
+		v1.rotate(Math.PI / 4);
+
 		SmallestRectangle rec = new SmallestRectangle(points);
 
 		Line[] l = rec.calculateSmallestRectangle();

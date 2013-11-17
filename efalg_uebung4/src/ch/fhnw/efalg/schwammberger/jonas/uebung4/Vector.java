@@ -51,7 +51,7 @@ public class Vector {
 
 	public void rotate(double angle) {
 		double newX = this.x * Math.cos(angle) - this.y * Math.sin(angle);
-		double newY = this.y * Math.sin(angle) + this.x * Math.cos(angle);
+		double newY = this.x * Math.sin(angle) + this.y * Math.cos(angle);
 		this.x = newX;
 		this.y = newY;
 	}
