@@ -88,7 +88,7 @@ public class ModifiedGraham {
 	}
 
 	/**
-	 * Modivied isConvex check.
+	 * isConvex check.
 	 * 
 	 * @param p0
 	 * @param p1

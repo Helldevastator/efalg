@@ -15,6 +15,12 @@ import javax.swing.JPanel;
 import ch.fhnw.efalg.schwammberger.jonas.uebung4.Line;
 import ch.fhnw.efalg.schwammberger.jonas.uebung4.SmallestRectangle;
 
+/**
+ * Main class for this application. It is responsible for the GUI.
+ * 
+ * @author Jon
+ * 
+ */
 public class Uebung4 {
 
 	private JFrame frmSmallestEnclosingRectangle;

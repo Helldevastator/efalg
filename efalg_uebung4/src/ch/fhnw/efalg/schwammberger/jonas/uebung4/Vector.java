@@ -36,6 +36,7 @@ public class Vector {
 	}
 
 	/**
+	 * create a vector directly
 	 * 
 	 * @param x
 	 * @param y
@@ -47,16 +48,28 @@ public class Vector {
 
 	/**
 	 * 
-	 * @return
+	 * @return magnitude ov vector
 	 */
 	public double calculateMagnitude() {
 		return Math.sqrt(x * x + y * y);
 	}
 
+	/**
+	 * Calculate 2d cross product.
+	 * 
+	 * @param v
+	 * @return
+	 */
 	public double cross(Vector v) {
 		return x * v.y - v.x * y;
 	}
 
+	/**
+	 * Rotate this vector according to angle
+	 * 
+	 * @param angle
+	 *            in radiants
+	 */
 	public void rotate(double angle) {
 		double newX = this.x * Math.cos(angle) - this.y * Math.sin(angle);
 		double newY = this.x * Math.sin(angle) + this.y * Math.cos(angle);
