@@ -9,12 +9,16 @@ import java.util.List;
  * Algorithm to calculate the smallest enclosing rectangle from a set of points.
  * 
  * @author Jon
- * 
  */
 public class SmallestRectangle {
 	private final ArrayList<Point> convexHull;
 	private final double piHalf = Math.PI / 2;
 
+	/**
+	 * @param points
+	 *            points of which the smallest enclosing rectangle should be
+	 *            calculated
+	 */
 	public SmallestRectangle(List<Point> points) {
 		ModifiedGraham graham = new ModifiedGraham();
 		this.convexHull = graham.calculateMinConvexHull(points);
@@ -23,7 +27,7 @@ public class SmallestRectangle {
 	/**
 	 * Calculates the smallest rectangle of the given points
 	 * 
-	 * @return
+	 * @return Line array, [0] + [2] and [1] + [3] are parallel.
 	 */
 	public Line[] calculateSmallestRectangle() {
 		Line[] minRectangle = new Line[4];
@@ -89,9 +93,11 @@ public class SmallestRectangle {
 	}
 
 	/**
+	 * find minimum in convex hull
 	 * 
 	 * @param useX
-	 * @return
+	 *            true if minimum should be searched in y space
+	 * @return index of minimum
 	 */
 	private int findMin(boolean useX) {
 		int min = Integer.MAX_VALUE;
@@ -107,9 +113,11 @@ public class SmallestRectangle {
 	}
 
 	/**
+	 * find max in convex hull
 	 * 
 	 * @param useX
-	 * @return
+	 *            true if maximum should be searched in X space
+	 * @return index of maximum
 	 */
 	private int findMax(boolean useX) {
 		int max = 0;
@@ -124,6 +132,11 @@ public class SmallestRectangle {
 		return index;
 	}
 
+	/**
+	 * Debug main function,
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		ArrayList<Point> points = new ArrayList<>();
 		points.add(new Point(0, 5));
@@ -138,10 +151,11 @@ public class SmallestRectangle {
 		for (int i = 0; i < 4; i++)
 			System.out.println(bla[i]);
 
+		System.out.println("------------------------");
 		Line l1 = new Line(new Point2D.Double(0, 0), new Vector(0, 5));
 		Line l2 = new Line(new Point2D.Double(0, 6), new Vector(5, 0));
 		Point p = l2.calculateIntersectionPoint(l1);
-		//System.out.println(p);
+		System.out.println(p);
 
 	}
 

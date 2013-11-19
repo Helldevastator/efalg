@@ -10,6 +10,12 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+/**
+ * Panel responsible for tracking the user points clicked and displaying the
+ * smallest rectangle.
+ * 
+ * @author Jon
+ */
 public class PointsPanel extends JPanel {
 	private List<Point> points;
 	private Point[] rectangle;
@@ -55,14 +61,34 @@ public class PointsPanel extends JPanel {
 
 	}
 
+	/**
+	 * 
+	 * @return List of points the user clicked
+	 */
 	public List<Point> getPoints() {
 		return this.points;
 	}
 
+	/**
+	 * Set smallest rectangle to display
+	 * 
+	 * @param rectangle
+	 */
 	public void setRectangle(Point[] rectangle) {
 		this.rectangle = rectangle;
 	}
 
+	/**
+	 * 
+	 * @return the number of points the user has given
+	 */
+	public int getPointCount() {
+		return this.points.size();
+	}
+
+	/**
+	 * clears the screen
+	 */
 	public void clear() {
 		this.points.clear();
 		this.rectangle = null;

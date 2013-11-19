@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import ch.fhnw.efalg.schwammberger.jonas.uebung4.Line;
@@ -18,6 +19,7 @@ public class Uebung4 {
 
 	private JFrame frmSmallestEnclosingRectangle;
 	private PointsPanel clickPlane;
+	private JButton btnCalculateRectangle;
 
 	/**
 	 * Launch the application.
@@ -44,7 +46,7 @@ public class Uebung4 {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the frame. Party generated with Windowbuilder
 	 */
 	private void initialize() {
 		frmSmallestEnclosingRectangle = new JFrame();
@@ -57,12 +59,17 @@ public class Uebung4 {
 		frmSmallestEnclosingRectangle.getContentPane().add(ControlsPanel, BorderLayout.WEST);
 		ControlsPanel.setLayout(new BoxLayout(ControlsPanel, BoxLayout.Y_AXIS));
 
-		JButton btnCalculateRectangle = new JButton("Calculate Rectangle");
+		btnCalculateRectangle = new JButton("Calculate Rectangle");
 		btnCalculateRectangle.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				SmallestRectangle algo = new SmallestRectangle(clickPlane.getPoints());
-				clickPlane.setRectangle(Line.calculateVertices(algo.calculateSmallestRectangle()));
+				if (clickPlane.getPointCount() >= 4) {
+					SmallestRectangle algo = new SmallestRectangle(clickPlane.getPoints());
+					clickPlane.setRectangle(Line.calculateVertices(algo.calculateSmallestRectangle()));
+				} else {
+
+					JOptionPane.showMessageDialog(frmSmallestEnclosingRectangle, "Needs at least 4 Points for the smallest enclosing Algorithm");
+				}
 			}
 		});
 		ControlsPanel.add(btnCalculateRectangle);
@@ -80,6 +87,5 @@ public class Uebung4 {
 
 		frmSmallestEnclosingRectangle.getContentPane().add(clickPlane, BorderLayout.CENTER);
 
-		//frame.getContentPane().add(panel, BorderLayout.NORTH);
 	}
 }
