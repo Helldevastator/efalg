@@ -1,6 +1,7 @@
 package ch.fhnw.efalg.schwammberger.jonas.uebung4;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,6 +81,10 @@ public class SmallestRectangle {
 			}
 		}
 
+		for (int i = 0; i < minRectangle.length; i++) {
+			System.out.println(minRectangle[i].toString());
+		}
+
 		return minRectangle;
 	}
 
@@ -128,11 +133,16 @@ public class SmallestRectangle {
 		points.add(new Point(5, 10));
 
 		SmallestRectangle rec = new SmallestRectangle(points);
-
 		Line[] l = rec.calculateSmallestRectangle();
 		Point[] bla = Line.calculateVertices(l);
 		for (int i = 0; i < 4; i++)
 			System.out.println(bla[i]);
+
+		Line l1 = new Line(new Point2D.Double(0, 0), new Vector(0, 5));
+		Line l2 = new Line(new Point2D.Double(0, 6), new Vector(5, 0));
+		Point p = l2.calculateIntersectionPoint(l1);
+		//System.out.println(p);
+
 	}
 
 }

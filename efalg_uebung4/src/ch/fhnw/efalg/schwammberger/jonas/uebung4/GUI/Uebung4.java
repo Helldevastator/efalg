@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import ch.fhnw.efalg.schwammberger.jonas.uebung4.Line;
 import ch.fhnw.efalg.schwammberger.jonas.uebung4.SmallestRectangle;
 
 public class Uebung4 {
@@ -61,7 +62,7 @@ public class Uebung4 {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				SmallestRectangle algo = new SmallestRectangle(clickPlane.getPoints());
-				clickPlane.setRectangle(algo.calculateSmallestRectangle());
+				clickPlane.setRectangle(Line.calculateVertices(algo.calculateSmallestRectangle()));
 			}
 		});
 		ControlsPanel.add(btnCalculateRectangle);

@@ -10,8 +10,6 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import ch.fhnw.efalg.schwammberger.jonas.uebung4.Line;
-
 public class PointsPanel extends JPanel {
 	private List<Point> points;
 	private Point[] rectangle;
@@ -42,6 +40,16 @@ public class PointsPanel extends JPanel {
 		for (Point p : points) {
 			g.drawRect(p.x, p.y, 1, 1);
 		}
+
+		//draw rectangle
+		if (rectangle != null) {
+			for (int i = 0; i < 4; i++) {
+				Point p1 = rectangle[i];
+				Point p2 = rectangle[(i + 1) % 4];
+				g2.drawLine(p1.x, p1.y, p2.x, p2.y);
+			}
+		}
+
 		super.repaint();
 		//g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -51,13 +59,14 @@ public class PointsPanel extends JPanel {
 		return this.points;
 	}
 
-	public void setRectangle(Line[] rectangle) {
-
+	public void setRectangle(Point[] rectangle) {
+		this.rectangle = rectangle;
 	}
 
 	public void clear() {
 		this.points.clear();
 		this.rectangle = null;
+		super.repaint();
 	}
 
 }

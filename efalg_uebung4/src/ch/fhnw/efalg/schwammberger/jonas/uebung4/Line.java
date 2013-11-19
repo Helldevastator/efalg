@@ -14,7 +14,7 @@ public class Line {
 	private Point2D p;
 	private Vector v;
 
-	public Line(Point p, Vector v) {
+	public Line(Point2D p, Vector v) {
 		this.p = p;
 		this.v = v;
 	}
@@ -67,17 +67,10 @@ public class Line {
 	 * @return Point with Integer numbers as
 	 */
 	public Point calculateIntersectionPoint(Line l) {
-		Vector s = this.v;
-		Vector t = new Vector(-l.v.getX(), -l.v.getY());
+		Vector points = new Vector(l.p.getX() - this.p.getX(), l.p.getY() - this.p.getY());
+		double t = points.cross(l.v) / this.v.cross(l.v);
 
-		double sm = p.getY() - p.getX();
-		double tm = l.p.getY() - l.p.getY();
-		double minorT = t.getX() * tm - t.getY() * sm;
-		double major = s.getX() * t.getY() - s.getY() * t.getY();
-
-		double s1 = -minorT / major;
-
-		return new Point((int) (this.p.getX() + s1 * s.getX()), (int) (this.p.getY() + s1 * s.getY()));
+		return new Point((int) (this.p.getX() + this.v.getX() * t), (int) (this.p.getY() + this.v.getY() * t));
 	}
 
 	/**
@@ -140,7 +133,7 @@ public class Line {
 	public static Point[] calculateVertices(Line[] rec) {
 		Point[] out = new Point[4];
 
-		out[0] = rec[0].calculateIntersectionPoint(rec[1]);
+		out[0] = rec[1].calculateIntersectionPoint(rec[0]);
 		out[1] = rec[1].calculateIntersectionPoint(rec[2]);
 		out[2] = rec[2].calculateIntersectionPoint(rec[3]);
 		out[3] = rec[3].calculateIntersectionPoint(rec[0]);
