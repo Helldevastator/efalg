@@ -97,8 +97,8 @@
 \newpage
 
 % Inhaltsverzeichnis
-\pagenumbering{Roman}
-\tableofcontents	  	
+%\pagenumbering{Roman}
+%\tableofcontents	  	
 
 
 \newpage
@@ -107,26 +107,32 @@
 
 % Inhalt Start
 
-\section{Einleitung}
-Dis ist ein Test mit Äpfel!
-\section{Algorithmen}
-Hier werden die verwendeten Algorithmen erklärt
-\subsection{Algorithmus für die Konvexe Hülle}
+
+\section{Algorithmus für die Konvexe Hülle}
 Für die Berechnung der Konvexen Hülle standen zwei Algorithmen zur Verfügung. Der Algorithmus von Graham und von Jarvis March. Welcher Algorithmus (O(n log n) versus O(n*m)) besser ist, hängt vom Eingabeverhalten des Benutzers ab. Da ich zum durchschnittlichen Verhalten keine Daten habe wurde Graham ausgewählt. Der Algorithmus von Graham wurde aus interesse von mir selber implementiert und modifiziert.
 
-\subsubsection{Modifikation}
+\subsection{Modifikation}
 Die Modifikation beschränkt sich darauf, dass nach dem Abbrechen der Hauptschleife nochmals eine isConvex() Prüfung mit Punkt $P_{0}$, PN und PN-1. Im falle das PN auf der Strecke zwischen $P_{0}$ und PN-1 ist PN nicht in der minimalen konvexen Hülle. Dies prüft der Algorithmus von Graham nicht, deshalb wurde diese Modifikation vorgenommen.
 
-\subsection{Algorithmus für die Berechnung des minimalen Rechtecks}
-Die Algorithmus startet mit dem minimalen achsenparalellen Rechteck der Convexen Hülle. Nun werden alle Strecken des Rechtecks um den Berührungspunkt gedreht, bis sie sich eine Strecke einen neuen Punkt der Konvexen Hülle berührt. Bei jede Berührung ist ein Kandidat für das minimale Rechteck. Wenn sich die Strecke mit einem neuen Punkt berührt hat, wird sie nun um den neuen Berührungspunkt weiter gedreht. Alle Strecken werden maximal um 90$^\circ$ gedreht, dann ist die Ausgangslage erreicht, das Minimale Rechteck
+\section{Algorithmus für die Berechnung des minimalen Rechtecks}
+Die Algorithmus startet mit dem minimalen achsenparalellen Rechteck der Convexen Hülle. Nun werden alle Strecken des Rechtecks um den Berührungspunkt gedreht, bis sie sich eine Strecke einen neuen Punkt der Konvexen Hülle berührt. Bei jede Berührung ist ein Kandidat für das minimale Rechteck. Wenn sich die Strecke mit einem neuen Punkt berührt hat, wird sie nun um den neuen Berührungspunkt weiter gedreht. Alle Strecken werden maximal um 90$^\circ$ gedreht, dann ist die Ausgangslage erreicht und das minimale Rechteck mindestens ein Mal besucht.
+
+Somit hat dieser Algorithmus einen Worst-Case von O(n). Er kann schneller abbrechen falls die Figur kleine Innenwinkel aufweist.
 
 Der Algorithmus braucht mindestens vier Punkte, deshalb muss beim Input von drei Punkten eine Sonderbehandlung durchgeführt werden.
 
-\subsubsection{Sonderbehandlung bei drei Punkten}
+\subsection{Sonderbehandlung bei drei Punkten}
 Bei drei Punkten muss man nur das minimale Rechteck eines Dreiecks finden. Das minimale Rechteck liegt immer mit einer seite an der längsten Seite des Dreiecks.
 
-\subsubsection{Implementierung}
+\subsection{Implementation}
 
+\subsection{Nachteile}
+Der grösste Nachteil dieser Implementierung ist, dass für die Drehung Floating Point Datentypen verwendet werden müssen. Bei der Konvertierung von Floating Point zu Integer kommen oft Fehler von +-1 vor, welches auf der Graphik sofort Sichtbar ist.
+\begin{figure} [h!]
+
+\includegraphics[scale= 0.75]{screenshot.png}
+\caption{Fehler in der Graphik}
+\end{figure}
 
 % Inhalt Ende 
 \end{document} 
