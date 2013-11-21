@@ -37,13 +37,34 @@ public class SmallestRectangle {
 	 * @return
 	 */
 	private static Line[] handleTriangle(ArrayList<Point> convexHull) {
-
+		Line[] out = new Line[4];
 		//find biggest side
 		Vector[] sides = new Vector[3];
-		for(int i = 0; i < 3; i++) {
-			sides = new Vector()
+		for (int i = 0; i < 3; i++) {
+			sides[i] = new Vector(convexHull.get((i + i) % 3), convexHull.get(i));
 		}
-		return null;
+		int maxIndex = 0;
+		double maxSide = sides[0].calculateMagnitude();
+		for (int i = 1; i < 3; i++) {
+			double currentSide = sides[i].calculateMagnitude();
+			if (maxSide < currentSide) {
+				maxSide = currentSide;
+				maxIndex = i;
+			}
+		}
+		Point A = convexHull.get(maxIndex);
+		Point B = convexHull.get((maxIndex + 1) % 3);
+		Point C = convexHull.get((maxIndex + 2) % 3);
+
+		out[0] = new Line(A, sides[maxIndex]);
+		Vector right = new Vector(sides[maxIndex]);
+		right.rotate(piHalf);
+		out[1] = new Line(B, right);
+		out[2] = new Line(C, new Vector(-sides[maxIndex].getX(), -sides[maxIndex].getY()));
+		Vector left = new Vector(sides[maxIndex]);
+		left.rotate(-piHalf);
+		out[3] = new Line(A, left);
+		return out;
 	}
 
 	/**
