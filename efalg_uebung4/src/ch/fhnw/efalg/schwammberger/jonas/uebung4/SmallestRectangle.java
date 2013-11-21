@@ -11,29 +11,52 @@ import java.util.List;
  * @author Jon
  */
 public class SmallestRectangle {
-	private final ArrayList<Point> convexHull;
-	private final double piHalf = Math.PI / 2;
-
-	/**
-	 * @param points
-	 *            points of which the smallest enclosing rectangle should be
-	 *            calculated
-	 */
-	public SmallestRectangle(List<Point> points) {
-		ModifiedGraham graham = new ModifiedGraham();
-		this.convexHull = graham.calculateMinConvexHull(points);
-	}
+	private static final double piHalf = Math.PI / 2;
 
 	/**
 	 * Calculates the smallest rectangle of the given points
 	 * 
 	 * @return Line array, [0] + [2] and [1] + [3] are parallel.
 	 */
-	public Line[] calculateSmallestRectangle() {
+	public static Line[] calculate(List<Point> points) {
+		ModifiedGraham graham = new ModifiedGraham();
+		ArrayList<Point> convexHull = graham.calculateMinConvexHull(points);
+
+		if (convexHull.size() >= 4) {
+			return handleGeneralCase(convexHull);
+		} else {
+			return handleTriangle(convexHull);
+		}
+	}
+
+	/**
+	 * Handle Triangle case, main algorithm doesn't work with less than 4
+	 * points. Luckily, this is very easy.
+	 * 
+	 * @param convexHull
+	 * @return
+	 */
+	private static Line[] handleTriangle(ArrayList<Point> convexHull) {
+
+		//find biggest side
+		Vector[] sides = new Vector[3];
+		for(int i = 0; i < 3; i++) {
+			sides = new Vector()
+		}
+		return null;
+	}
+
+	/**
+	 * Handle the general case for convexHull >= 4
+	 * 
+	 * @param convexHull
+	 * @return
+	 */
+	private static Line[] handleGeneralCase(ArrayList<Point> convexHull) {
 		Line[] minRectangle = new Line[4];
 		Line[] currentRectangle = new Line[4];
-		int[] hullIndices = { 0, this.findMin(true), this.findMax(false), this.findMax(true) };
-		int size = this.convexHull.size();
+		int[] hullIndices = { 0, findMin(true, convexHull), findMax(false, convexHull), findMax(true, convexHull) };
+		int size = convexHull.size();
 		double minArea;
 		double totalAngle = 0;
 
@@ -99,7 +122,7 @@ public class SmallestRectangle {
 	 *            true if minimum should be searched in y space
 	 * @return index of minimum
 	 */
-	private int findMin(boolean useX) {
+	private static int findMin(boolean useX, ArrayList<Point> convexHull) {
 		int min = Integer.MAX_VALUE;
 		int index = -1;
 		for (int i = 0; i < convexHull.size(); i++) {
@@ -119,7 +142,7 @@ public class SmallestRectangle {
 	 *            true if maximum should be searched in X space
 	 * @return index of maximum
 	 */
-	private int findMax(boolean useX) {
+	private static int findMax(boolean useX, ArrayList<Point> convexHull) {
 		int max = 0;
 		int index = -1;
 		for (int i = 0; i < convexHull.size(); i++) {
@@ -145,8 +168,7 @@ public class SmallestRectangle {
 		points.add(new Point(10, 5));
 		points.add(new Point(5, 10));
 
-		SmallestRectangle rec = new SmallestRectangle(points);
-		Line[] l = rec.calculateSmallestRectangle();
+		Line[] l = SmallestRectangle.calculate(points);
 		Point[] bla = Line.calculateVertices(l);
 		for (int i = 0; i < 4; i++)
 			System.out.println(bla[i]);

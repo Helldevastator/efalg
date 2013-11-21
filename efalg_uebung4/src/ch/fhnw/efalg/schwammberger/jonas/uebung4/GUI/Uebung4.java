@@ -69,12 +69,11 @@ public class Uebung4 {
 		btnCalculateRectangle.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (clickPlane.getPointCount() >= 4) {
-					SmallestRectangle algo = new SmallestRectangle(clickPlane.getPoints());
-					clickPlane.setRectangle(Line.calculateVertices(algo.calculateSmallestRectangle()));
+				if (clickPlane.getPointCount() >= 3) {
+					clickPlane.setRectangle(Line.calculateVertices(SmallestRectangle.calculate(clickPlane.getPoints())));
 				} else {
 
-					JOptionPane.showMessageDialog(frmSmallestEnclosingRectangle, "Needs at least 4 Points for the smallest enclosing Algorithm");
+					JOptionPane.showMessageDialog(frmSmallestEnclosingRectangle, "Needs at least 3 Points for the smallest enclosing Algorithm");
 				}
 			}
 		});

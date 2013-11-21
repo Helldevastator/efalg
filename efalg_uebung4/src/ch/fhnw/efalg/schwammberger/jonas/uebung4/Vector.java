@@ -1,5 +1,6 @@
 package ch.fhnw.efalg.schwammberger.jonas.uebung4;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 
 /**
@@ -21,6 +22,11 @@ public class Vector {
 	 *            start point
 	 */
 	public Vector(Point2D endPoint, Point2D startPoint) {
+		x = endPoint.getX() - startPoint.getX();
+		y = endPoint.getY() - startPoint.getY();
+	}
+
+	public Vector(Point endPoint, Point startPoint) {
 		x = endPoint.getX() - startPoint.getX();
 		y = endPoint.getY() - startPoint.getY();
 	}
