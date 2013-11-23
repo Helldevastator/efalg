@@ -6,6 +6,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{ulem}
+\usepackage{hyperref}
 \usepackage{stmaryrd} %f\UTF{00FC}r Blitz!
 
 %PageStyle
@@ -108,6 +109,7 @@
 % Inhalt Start
 
 \section{Einleitung}
+Das Problem, das minimale Rechteck zu finden, ist für die Bildverarbeitung und Computergraphik von zentraler Bedeutung. In der Bildverarbeitung kann man dieses Verfahren benutzen um die Orientierung einer Figur zu bestimmen. In der Computergraphik kann das minimale Rechteck für das Frustrum-Culling verwendet werden.
 
 \section{Algorithmus für die konvexe Hülle}
 Für die Berechnung der konvexen Hülle standen zwei Algorithmen zur Verfügung. Der Algorithmus von Graham und von Jarvis March. Welcher Algorithmus (O(n log n) versus O(n*m)) besser ist, hängt vom Eingabeverhalten des Benutzers ab. Da ich zum durchschnittlichen Verhalten keine Daten habe wurde Graham ausgewählt. Der Algorithmus von Graham wurde aus interesse von mir selber implementiert und modifiziert.
@@ -116,6 +118,7 @@ Für die Berechnung der konvexen Hülle standen zwei Algorithmen zur Verfügung.
 Die Modifikation beschränkt sich darauf, dass nach dem Abbrechen der Hauptschleife nochmals eine isConvex() Prüfung mit Punkt $P_{0}$, $P_N$ und $P_{N-1}$. Im falle das $P_N$ auf der Strecke zwischen $P_{0}$ und $P_{N-1}$ ist  $P_N$ nicht in der minimalen konvexen Hülle. Dies prüft der Algorithmus von Graham nicht, deshalb wurde diese Modifikation vorgenommen.
 
 \section{Algorithmus für die Berechnung des minimalen Rechtecks}
+Die Idee des Algorithmus ist auf der folgenden Webseite nachzulesen:\newline \url{http://cgm.cs.mcgill.ca/~orm/maer.html} \newline
 Gegeben sei die konvexe Hülle einer Punktmenge, von der das minimale Rechteck berechnet werden soll.
 \begin{enumerate}
 	\item Erstelle ein achsenparalelles Rechteck um die konvexe Hülle. Jede Seite berührt die konvexe Hülle in einem Punkt.
@@ -132,10 +135,20 @@ Bei drei Punkten muss man nur das minimale Rechteck eines Dreiecks finden. Das m
 
 \subsection{Implementation}
 \subsubsection{ModifiedGraham}
+In dieser Klasse ist, wie der Name andeutet, der modifizierte Algorithmus von Graham implementiert. 
 \subsubsection{SmallestRectangle}
+Hier ist der eigentliche Algorithmus um das minimale Rechteck zu berechnen. Diese Klasse verwendet die Klassen Line und ModifiedGraham.
 \subsubsection{Line}
+Diese Klasse repräsentiert eine Gerade, mit einen Ursprungsort und einen Richtungsvektor. Hier wird der Winkel berechnet, welcher die Gerade um den Ursprungsort gedreht werden soll, damit sie durch einen weiteren Punkt geht.
 \subsubsection{Vector}
+Eine simple Klasse, die einen zweidimensionalen Vektor als zwei Double-Werte repräsentiert.
 
+\subsubsection{PointsPanel}
+Eine Erweiterung von JPanel, welche die Darstellung des Rechtecks und der Punktemenge übernimmt.
+
+\subsubsection{Uebung4}
+In dieser Klasse ist die main() Methode und die GUI Implementation.
+\pagebreak
 \subsection{Fazit}
 Die totale Laufzeit des Algorithmus setzt sich aus zwei Laufzeiten zusammen
 \begin{enumerate}
@@ -148,16 +161,16 @@ Die Laufzeit vom Graham-Algorithmus ist bekannt, $O(n log(n))$. Die Laufzeit fü
  \item Die vier Winkel für die nächsten Berührungspunkte berechnen, den Kleinsten auswählen und die Geraden drehen. Es bleiben immer vier Geraden deshalb $O(1)$
  \item Flächenberechnung braucht ebenfalls keine Schleife, deshalb $O(1)$
 \end{itemize}
-Das wird solange ausgeführt, bis der totale Winkel 90$^\circ$ ist. Das ist genau dann der Fall, wenn jeder Punkt in der konvexen Hülle genau ein Mal ein Berührungspunkt einer Geraden war. Das ergibt eine Laufzeit von $O(m)$ (m sei die Anzahl der Punkte der konvexen Hülle).
+Das wird solange ausgeführt, bis der totale Winkel 90$^\circ$ ist. Das ist genau dann der Fall, wenn jeder Punkt in der konvexen Hülle genau ein Mal ein Berührungspunkt einer Geraden war. Das ergibt eine Laufzeit von $O(m)$ (m sei die Anzahl der Punkte der konvexen Hülle). Somit ist die totale Laufzeit des Algorithmus $O(n log n)$
 
 Der grösste Nachteil dieser Implementierung ist, dass für die Drehung Floating Point Datentypen verwendet werden müssen. Bei der Konvertierung von Floating Point zu Integer kommen oft Fehler von +-1 vor, welches auf der Graphik sofort Sichtbar ist. 
 
 \begin{figure} [h!]
-
 \includegraphics[scale= 0.75]{screenshot.png}
 \caption{Fehler durch Floating Point Rundung}
 \end{figure}
 
 Ein vielleicht genauerer Ansatz wäre, eine Gerade an eine Seite der konvexen Hülle zu legen und daraus das minimale Dreieck berechnen. Wenn man das für die Hälfte aller Seiten durchführt, erhält man ebenfalls das minimale Rechteck. Jedoch muss man alleine für die Paralelle den Punkt mit dem grössten Abstand zur geraden finden, welches einen Aufwand von $O(m)$ pro Seite bedeutet (m sei die Anzahl der Punkte der konvexen Hülle). Wenn man den Algorithmus für ca $m/2$ Punkte ausführt, ergibt das eine Laufzeit von $O(m^2)$, was ebenfalls nicht erwünschenswert ist.
 % Inhalt Ende 
+
 \end{document} 
