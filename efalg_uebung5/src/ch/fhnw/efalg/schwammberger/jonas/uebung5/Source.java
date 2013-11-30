@@ -7,7 +7,9 @@ public class Source {
 
 	public static void main(String[] args) {
 		if (args.length == 0) {
-
+			double[][] table = { { -1, -1, 40 }, { -40, -120, 2400 }, { -7, -12, 312 }, { 100, 250, 0 } };
+			Simplex simple = new Simplex(table, 4, 3);
+			System.out.println(simple.solve());
 		} else {
 			//vogel test
 

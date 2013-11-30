@@ -60,19 +60,21 @@ public class Simplex {
 		double pivot = -table[pR][pC];
 
 		for (int i = 0; i < cols; i++) {
-			if (cols == pC)
+			if (i == pC)
 				table[pR][pC] = -1 / pivot;
 			else
 				table[pR][i] = table[pR][i] / pivot;
 		}
 
 		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
-				if (j != pC)
-					table[i][j] += table[i][pC] * table[pR][j];
+			if (i != pR) {
+				for (int j = 0; j < cols; j++) {
+					if (j != pC)
+						table[i][j] += table[i][pC] * table[pR][j];
 
+				}
+				table[i][pC] = table[i][pC] * table[pR][pC];
 			}
-			table[i][pC] = table[i][pC] * table[pR][pC];
 		}
 	}
 
