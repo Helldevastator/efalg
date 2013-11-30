@@ -46,9 +46,13 @@ public class Source {
 			table = new double[rows][cols];
 			isMax = s.next().contains("max");
 			//s.next?
-			//read target function
+
+			//read target function, if we should minimize the function, multiply with -1
 			for (int i = 0; i < cols; i++)
-				table[i][rows - 1] = s.nextDouble();
+				if (isMax)
+					table[i][rows - 1] = s.nextDouble();
+				else
+					table[i][rows - 1] = -s.nextDouble();
 
 			canBeNeg = new boolean[cols];
 			for (int i = 0; i < cols; i++)
