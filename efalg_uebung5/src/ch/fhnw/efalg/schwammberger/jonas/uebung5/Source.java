@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Source {
 
 	public static void main(String[] args) {
-		if (args.length < 0) {
+		if (args.length == 0) {
 
 		} else {
 			//vogel test
@@ -20,8 +20,8 @@ public class Source {
 
 		try {
 			int correction = 0;
-			int n;
-			int m;
+			int cols;
+			int rows;
 			boolean[] canBeNeg;
 			//boolean[] isGreater;
 			boolean isMax;
@@ -39,15 +39,35 @@ public class Source {
 			}
 
 			s.reset();
-			n = s.nextInt() + 1;
-			m = s.nextInt() + correction + 1;
-			table = new double[n][m];
-			isMax = s.nextBoolean();
-			for (int i = 0; i < n; i++)
-				table[i][m - 1] = s.nextDouble();
-			canBeNeg = new boolean[n];
-			for (int i = 0; i < n; i++)
+			cols = s.nextInt() + 1;
+			rows = s.nextInt() + correction + 1;
+			table = new double[rows][cols];
+			isMax = s.next().contains("max");
+			//s.next?
+			//read target function
+			for (int i = 0; i < cols; i++)
+				table[i][rows - 1] = s.nextDouble();
+
+			canBeNeg = new boolean[cols];
+			for (int i = 0; i < cols; i++)
 				canBeNeg[i] = s.nextBoolean();
+
+			//read table
+			for (int i = 0; i < rows - 1; i++) {
+				String nextLine = s.next();
+				if (nextLine.startsWith("=")) {
+					for (int j = 0; j < cols; j++) {
+						double input = s.nextDouble();
+						table[i][j] = input;
+						table[i + 1][j] = input; //missing >= , *(-1)??
+					}
+					i++;
+
+				} else {
+					for (int j = 0; j < cols; j++)
+						table[i][j] = s.nextDouble();
+				}
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
