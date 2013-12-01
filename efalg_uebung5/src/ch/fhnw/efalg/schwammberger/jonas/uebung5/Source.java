@@ -1,15 +1,15 @@
 package ch.fhnw.efalg.schwammberger.jonas.uebung5;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.Scanner;
 
 public class Source {
 
 	public static void main(String[] args) {
 		if (args.length == 0) {
-			double[][] table = { { -1, -1, 40 }, { -40, -120, 2400 }, { -7, -12, 312 }, { 100, 250, 0 } };
-			Simplex simple = new Simplex(table, 4, 3);
-			System.out.println(simple.solve());
+
+			read("./LP_problems/BasicExample.csv");
 		} else {
 			//vogel test
 
@@ -17,10 +17,18 @@ public class Source {
 
 	}
 
-	private void read(String filePath) {
-		Scanner s;
+	private static void testSimplex() {
+		double[][] table = { { -1, -1, 40 }, { -40, -120, 2400 }, { -7, -12, 312 }, { 100, 250, 0 } };
+		Simplex simple = new Simplex(table);
+		System.out.println(simple.solve());
+	}
 
+	private static void read(String filePath) {
+		Scanner s = null;
+
+		BufferedReader in;
 		try {
+			String line;
 			int correction = 0;
 			int cols;
 			int rows;
@@ -29,18 +37,18 @@ public class Source {
 			boolean isMax;
 			double[][] table;
 
-			s = new Scanner(new File(filePath));
-			s.nextLine(); //skip first line
-			s.nextLine(); //skip second
-			s.nextLine(); //skip third
+			in = new BufferedReader(new FileReader(filePath));
+			in.readLine();
+			in.readLine();
+			in.readLine();
 
-			while (s.hasNext()) {
-				String line = s.nextLine();
+			while ((line = in.readLine()) != null)
 				if (line.startsWith("="))
 					correction++;
-			}
 
-			s.reset();
+			in.close();
+			in = new BufferedReader(new FileReader(filePath)); //reopen
+
 			cols = s.nextInt() + 1;
 			rows = s.nextInt() + correction + 1;
 			table = new double[rows][cols];
@@ -80,4 +88,5 @@ public class Source {
 		}
 
 	}
+
 }
