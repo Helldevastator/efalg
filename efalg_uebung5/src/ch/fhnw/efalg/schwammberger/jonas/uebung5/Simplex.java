@@ -13,10 +13,18 @@ public class Simplex {
 		int rows = table.length;
 		int cols = table[0].length;
 
-		//TODO: two-phase method here
+		//Two phase method initialization
 		isTwoPhase = hasNegC();
 		if (isTwoPhase) {
-			//TODO: create table2;
+			table2 = new double[rows][cols + 1];
+			for (int i = 0; i < rows - 1; i++) {
+				table2[i][0] = 1;
+				for (int j = 0; j < cols; j++)
+					table2[i][j + 1] = table[i][j];
+			}
+			table2[rows - 1][0] = -1;
+			for (int j = 0; j < cols; j++)
+				table2[rows - 1][j + 1] = 0;
 		}
 	}
 
@@ -31,8 +39,13 @@ public class Simplex {
 
 	public double solve() {
 		if (isTwoPhase) {
+			//rotate
 			solvePhase(table2);
-			//TODO: copy to table
+
+			//copy to table
+			for (int i = 0; i < table2.length; i++)
+				for (int j = 1; j < table2[0].length; j++)
+					table[i][j - 1] = table2[i][j];
 		}
 
 		return solvePhase(table);

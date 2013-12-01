@@ -8,8 +8,8 @@ public class Source {
 
 	public static void main(String[] args) {
 		if (args.length == 0) {
-
-			read("./LP_problems/BasicExample.csv");
+			testTwoPhaseSimplex();
+			//read("./LP_problems/BasicExample.csv");
 		} else {
 			//vogel test
 
@@ -17,7 +17,13 @@ public class Source {
 
 	}
 
-	private static void testSimplex() {
+	private static void testTwoPhaseSimplex() {
+		double[][] table = { { 1, -1, -1, 18 }, { 1, -1, 0, 11 }, { 1, 0, -1, 10 }, { 1, 1, 1, -9 }, { 1, 0, 0, 0 } };
+		Simplex simple = new Simplex(table);
+		System.out.println(simple.solve());
+	}
+
+	private static void testSimpleSimplex() {
 		double[][] table = { { -1, -1, 40 }, { -40, -120, 2400 }, { -7, -12, 312 }, { 100, 250, 0 } };
 		Simplex simple = new Simplex(table);
 		System.out.println(simple.solve());
@@ -33,7 +39,7 @@ public class Source {
 			int cols;
 			int rows;
 			boolean[] canBeNeg;
-			//boolean[] isGreater;
+
 			boolean isMax;
 			double[][] table;
 
