@@ -18,14 +18,14 @@ public class Source {
 	}
 
 	private static void testTwoPhaseSimplex() {
-		double[][] table = { { -1, -1, 18 }, { -1, 0, 11 }, { 0, -1, 10 }, { 1, 1, -9 }, { 1, 3, -229 } };
-		Simplex simple = new Simplex(table);
+		double[][] table = { { -1, -1, 18 }, { -1, 0, 11 }, { 0, -1, 10 }, { 1, 1, -9 }, { -1, -3, 229 } };
+		Simplex simple = new Simplex(table, false);
 		System.out.println(simple.solve());
 	}
 
 	private static void testSimpleSimplex() {
 		double[][] table = { { -1, -1, 40 }, { -40, -120, 2400 }, { -7, -12, 312 }, { 100, 250, 0 } };
-		Simplex simple = new Simplex(table);
+		Simplex simple = new Simplex(table, true);
 		System.out.println(simple.solve());
 	}
 

@@ -6,10 +6,12 @@ public class Simplex {
 	private int[] columnVar; //helper variable is 0 [val(xo) = 0]
 	private int[] rowVar;
 	private boolean isTwoPhase;
+	private boolean isMax;
 	private int rows;
 	private int cols;
 
-	public Simplex(double[][] table) {
+	public Simplex(double[][] table, boolean isMaximizingProblem) {
+		this.isMax = isMaximizingProblem;
 		this.isTwoPhase = hasNegC(table);
 		this.rows = table.length;
 		this.cols = isTwoPhase ? table[0].length + 1 : table[0].length;
@@ -35,6 +37,9 @@ public class Simplex {
 		this.rowVar = new int[rows];
 		for (int i = 0; i < rows; i++)
 			this.rowVar[i] = i + cols;
+
+		if (!isMax)
+			this.invertTargetFunction();
 	}
 
 	private boolean hasNegC(double[][] table) {
@@ -54,16 +59,14 @@ public class Simplex {
 				tmp[i - 1] = table[rows - 1][i];
 				table[rows - 1][i] = 0;
 			}
-			this.printTable();
 			int pRow = findLowestC();
 			rotate(pRow, 0);
-			printTable();
-			solvePhase();
+			double tmpSolution = solvePhase();
 			printTable();
 
-			//check if table[rows-1][cols-1] = 0
+			//check if tmpSolution = 0
 
-			//if x0 is in a row, swap it to a column
+			//if x0 is in a row, swap it to a column. It doesn't matter which column
 			for (int i = 0; i < rows; i++) {
 				if (this.rowVar[i] == 0) {
 					rotate(i, 0);
@@ -71,7 +74,7 @@ public class Simplex {
 				}
 			}
 
-			//put in target function
+			//put in target function, D
 			int tmpIndex = 0;
 			for (int i = 0; i < cols; i++) {
 				if (this.columnVar[i] == 0) {
@@ -80,14 +83,17 @@ public class Simplex {
 						table[j][i] = 0;
 					table[rows - 1][i] = 0;
 				} else {
-					table[rows - 1][i] = tmp[tmpIndex];
+					table[rows - 1][i] = tmp[tmpIndex]; //TODO:this is wrong!
 					tmpIndex++;
 				}
 			}
 
 		}
 
-		return solvePhase();
+		printTable();
+		double tmp = solvePhase();
+		printTable();
+		return isMax ? tmp : -tmp;
 	}
 
 	private final int findLowestC() {
@@ -121,7 +127,7 @@ public class Simplex {
 		double min = Double.MAX_VALUE;
 		int out = -1;
 
-		for (int i = 0; i < rows; i++) {
+		for (int i = 0; i < rows - 1; i++) {
 			if (table[i][pivotCol] < 0) {
 				double rate = Math.abs(table[i][cols - 1] / table[i][pivotCol]);
 				if (rate < min) {
@@ -172,6 +178,12 @@ public class Simplex {
 				table[i][pC] = table[i][pC] * table[pR][pC];
 			}
 		}
+	}
+
+	private final void invertTargetFunction() {
+		for (int i = 0; i < cols; i++)
+			if (this.columnVar[i] != 0 || !this.isTwoPhase)
+				table[rows - 1][i] = -table[rows - 1][i];
 	}
 
 	public final void printTable() {
