@@ -70,10 +70,11 @@ public class Source {
 
 			isMax = readTargetFunction(in, table, rows, cols);
 			//read canbeNeg
-			//			canBeNeg = new boolean[cols];
-			//			for (int i = 0; i < cols; i++)
-			//				canBeNeg[i] = s.nextBoolean();
-			in.readLine();
+			canBeNeg = new boolean[cols];
+			tmp = in.readLine().split(";");
+			for (int i = 0; i < cols; i++)
+				canBeNeg[i] = Boolean.parseBoolean(tmp[i]);
+
 			readTable(in, table, rows, cols);
 
 		} catch (Exception e) {
