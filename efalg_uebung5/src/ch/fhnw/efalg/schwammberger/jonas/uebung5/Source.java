@@ -18,7 +18,7 @@ public class Source {
 	}
 
 	private static void testTwoPhaseSimplex() {
-		double[][] table = { { 1, -1, -1, 18 }, { 1, -1, 0, 11 }, { 1, 0, -1, 10 }, { 1, 1, 1, -9 }, { 1, 0, 0, 0 } };
+		double[][] table = { { -1, -1, 18 }, { -1, 0, 11 }, { 0, -1, 10 }, { 1, 1, -9 }, { 1, 3, -229 } };
 		Simplex simple = new Simplex(table);
 		System.out.println(simple.solve());
 	}

@@ -10,18 +10,23 @@ public class Simplex {
 	private int cols;
 
 	public Simplex(double[][] table) {
+		this.isTwoPhase = hasNegC(table);
 		this.rows = table.length;
-		this.cols = table[0].length + 1;
+		this.cols = isTwoPhase ? table[0].length + 1 : table[0].length;
 		this.table = new double[rows][cols];
 
+		int colStart = isTwoPhase ? 1 : 0;
 		//copy and add helper variable
 		for (int i = 0; i < rows; i++) {
-			this.table[i][0] = 1; //add helper variable in case we need it for twophase method
-			for (int j = 1; j < cols; j++) {
-				this.table[i][j] = table[i][j - 1];
+			if (isTwoPhase)
+				this.table[i][0] = 1; //add helper variable for two phase method
+			for (int j = colStart; j < cols; j++) {
+				this.table[i][j] = table[i][j - colStart];
 			}
 		}
-		this.table[rows - 1][0] = 0;
+
+		if (isTwoPhase)
+			this.table[rows - 1][0] = -1;
 
 		this.columnVar = new int[cols];
 		for (int i = 0; i < cols; i++)
@@ -30,15 +35,12 @@ public class Simplex {
 		this.rowVar = new int[rows];
 		for (int i = 0; i < rows; i++)
 			this.rowVar[i] = i + cols;
-
-		//Two phase method initialization
-		this.isTwoPhase = hasNegC();
 	}
 
-	private boolean hasNegC() {
-		int cols = this.table[0].length;
-		for (int i = 0; i < this.table.length; i++) {
-			if (this.table[i][cols - 1] < 0)
+	private boolean hasNegC(double[][] table) {
+		int cols = table[0].length;
+		for (int i = 0; i < table.length; i++) {
+			if (table[i][cols - 1] < 0)
 				return true;
 		}
 		return false;
@@ -46,17 +48,59 @@ public class Simplex {
 
 	public double solve() {
 		if (isTwoPhase) {
-			//copy target function
-			//rotate
-
+			//copy target function without x0
+			double[] tmp = new double[cols - 1];
+			for (int i = 1; i < cols; i++) {
+				tmp[i - 1] = table[rows - 1][i];
+				table[rows - 1][i] = 0;
+			}
+			this.printTable();
+			int pRow = findLowestC();
+			rotate(pRow, 0);
+			printTable();
 			solvePhase();
+			printTable();
 
-			//find x0
-			//maybe rotate
-			//set x0 to 0
+			//check if table[rows-1][cols-1] = 0
+
+			//if x0 is in a row, swap it to a column
+			for (int i = 0; i < rows; i++) {
+				if (this.rowVar[i] == 0) {
+					rotate(i, 0);
+					break;
+				}
+			}
+
+			//put in target function
+			int tmpIndex = 0;
+			for (int i = 0; i < cols; i++) {
+				if (this.columnVar[i] == 0) {
+					//set x0 to 0
+					for (int j = 0; j < rows; j++)
+						table[j][i] = 0;
+					table[rows - 1][i] = 0;
+				} else {
+					table[rows - 1][i] = tmp[tmpIndex];
+					tmpIndex++;
+				}
+			}
+
 		}
 
 		return solvePhase();
+	}
+
+	private final int findLowestC() {
+		int out = -1;
+		double min = Double.MAX_VALUE;
+		for (int i = 0; i < rows; i++) {
+			if (table[i][cols - 1] < min) {
+				out = i;
+				min = table[i][cols - 1];
+			}
+		}
+
+		return out;
 	}
 
 	private final double solvePhase() {
@@ -106,6 +150,11 @@ public class Simplex {
 	private final void rotate(int pR, int pC) {
 		double pivot = -table[pR][pC];
 
+		//swap variables, it is used to find x0 later on
+		int tmp = this.columnVar[pC];
+		this.columnVar[pC] = this.rowVar[pR];
+		this.rowVar[pR] = tmp;
+
 		for (int i = 0; i < cols; i++) {
 			if (i == pC)
 				table[pR][pC] = -1 / pivot;
@@ -123,6 +172,18 @@ public class Simplex {
 				table[i][pC] = table[i][pC] * table[pR][pC];
 			}
 		}
+	}
+
+	public final void printTable() {
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				System.out.print(table[i][j] + " ");
+			}
+
+			System.out.println();
+		}
+
+		System.out.println();
 	}
 
 }
