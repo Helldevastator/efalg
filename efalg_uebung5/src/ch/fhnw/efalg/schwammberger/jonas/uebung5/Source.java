@@ -82,9 +82,14 @@ public class Source {
 		}
 
 		if (table != null) {
-			System.out.println("bla");
+			try {
+				Simplex simple = new Simplex(table, isMax);
+				double solution = simple.solve();
+				System.out.println(solution);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
 		}
-
 	}
 
 	private static int getCorrection(BufferedReader in) throws IOException {
