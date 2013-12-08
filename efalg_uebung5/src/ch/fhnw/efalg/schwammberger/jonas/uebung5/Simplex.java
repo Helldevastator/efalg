@@ -3,29 +3,36 @@ package ch.fhnw.efalg.schwammberger.jonas.uebung5;
 public class Simplex {
 	private double[][] table; //row, col
 
+	private int[] columnVar; //helper variable is 0 [val(xo) = 0]
+	private int[] rowVar;
 	private boolean isTwoPhase;
-	private double[][] table2;
-
-	//data
+	private int rows;
+	private int cols;
 
 	public Simplex(double[][] table) {
-		this.table = table;
-		int rows = table.length;
-		int cols = table[0].length;
+		this.rows = table.length;
+		this.cols = table[0].length + 1;
+		this.table = new double[rows][cols];
+
+		//copy and add helper variable
+		for (int i = 0; i < rows; i++) {
+			this.table[i][0] = 1; //add helper variable in case we need it for twophase method
+			for (int j = 1; j < cols; j++) {
+				this.table[i][j] = table[i][j - 1];
+			}
+		}
+		this.table[rows - 1][0] = 0;
+
+		this.columnVar = new int[cols];
+		for (int i = 0; i < cols; i++)
+			this.columnVar[i] = i;
+
+		this.rowVar = new int[rows];
+		for (int i = 0; i < rows; i++)
+			this.rowVar[i] = i + cols;
 
 		//Two phase method initialization
-		isTwoPhase = hasNegC();
-		if (isTwoPhase) {
-			table2 = new double[rows][cols + 1];
-			for (int i = 0; i < rows - 1; i++) {
-				table2[i][0] = 1;
-				for (int j = 0; j < cols; j++)
-					table2[i][j + 1] = table[i][j];
-			}
-			table2[rows - 1][0] = -1;
-			for (int j = 0; j < cols; j++)
-				table2[rows - 1][j + 1] = 0;
-		}
+		this.isTwoPhase = hasNegC();
 	}
 
 	private boolean hasNegC() {
@@ -39,27 +46,26 @@ public class Simplex {
 
 	public double solve() {
 		if (isTwoPhase) {
+			//copy target function
 			//rotate
-			solvePhase(table2);
 
-			//copy to table
-			for (int i = 0; i < table2.length; i++)
-				for (int j = 1; j < table2[0].length; j++)
-					table[i][j - 1] = table2[i][j];
+			solvePhase();
+
+			//find x0
+			//maybe rotate
+			//set x0 to 0
 		}
 
-		return solvePhase(table);
+		return solvePhase();
 	}
 
-	private static final double solvePhase(double[][] table) {
-		int rows = table.length;
-		int cols = table[0].length;
+	private final double solvePhase() {
 		double result = table[rows - 1][cols - 1];
 		int pivotCol = 0;
-		while ((pivotCol = findPCol(table)) >= 0) {
-			int pivotRow = findPRow(table, pivotCol); //TODO: case pivotCol == -1
+		while ((pivotCol = findPCol()) >= 0) {
+			int pivotRow = findPRow(pivotCol); //TODO: case pivotCol == -1
 
-			rotate(table, pivotRow, pivotCol);
+			rotate(pivotRow, pivotCol);
 			//TODO: handle special cases
 			result = table[rows - 1][cols - 1];
 		}
@@ -67,9 +73,7 @@ public class Simplex {
 		return result;
 	}
 
-	private static final int findPRow(double[][] table, int pivotCol) {
-		int rows = table.length;
-		int cols = table[0].length;
+	private final int findPRow(int pivotCol) {
 		double min = Double.MAX_VALUE;
 		int out = -1;
 
@@ -86,9 +90,7 @@ public class Simplex {
 		return out;
 	}
 
-	private static final int findPCol(double[][] table) {
-		int rows = table.length;
-		int cols = table[0].length;
+	private final int findPCol() {
 		int out = -1;
 		//don't check result column
 		for (int i = 0; i < cols - 1; i++) {
@@ -101,10 +103,7 @@ public class Simplex {
 		return out;
 	}
 
-	private static final void rotate(double[][] table, int pR, int pC) {
-		int rows = table.length;
-		int cols = table[0].length;
-
+	private final void rotate(int pR, int pC) {
 		double pivot = -table[pR][pC];
 
 		for (int i = 0; i < cols; i++) {
