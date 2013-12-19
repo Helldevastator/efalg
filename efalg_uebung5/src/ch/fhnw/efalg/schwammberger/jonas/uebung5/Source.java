@@ -14,7 +14,7 @@ public class Source {
 			//read("./LP_problems/BasicExample.csv");
 		} else {
 			//vogel test
-
+			//read(args[0]);
 		}
 
 	}
