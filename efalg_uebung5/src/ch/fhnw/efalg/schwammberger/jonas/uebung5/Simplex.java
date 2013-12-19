@@ -9,6 +9,7 @@ public class Simplex {
 	private boolean isMax;
 	private int rows;
 	private int cols;
+	private int x0Column;
 
 	public Simplex(double[][] table, boolean isMaximizingProblem) {
 		this.isMax = isMaximizingProblem;
@@ -64,7 +65,7 @@ public class Simplex {
 			double tmpSolution = solvePhase();
 			printTable();
 
-			//check if tmpSolution = 0
+			//check if tmpSolution = 0; if so, gooooooooddd!
 
 			//if x0 is in a row, swap it to a column. It doesn't matter which column
 			for (int i = 0; i < rows; i++) {
@@ -74,20 +75,31 @@ public class Simplex {
 				}
 			}
 
-			//put in target function, D
+			//put in target function, remove x0
 			int tmpIndex = 0;
 			for (int i = 0; i < cols; i++) {
 				if (this.columnVar[i] == 0) {
 					//set x0 to 0
+					this.x0Column = i;
 					for (int j = 0; j < rows; j++)
 						table[j][i] = 0;
-					table[rows - 1][i] = 0;
+					//table[rows - 1][i] = 0;//maybe not needed?
 				} else {
-					table[rows - 1][i] = tmp[tmpIndex]; //TODO:this is wrong!
+					table[rows - 1][i] = tmp[tmpIndex];
 					tmpIndex++;
 				}
 			}
 
+			//ersetzen
+			for (int i = 0; i < tmp.length; i++) {
+				if (i != x0Column) {
+					if (columnVar[i] < tmp.length - 1) {
+						//this is an x var, simply copy the content
+					} else {
+						//look for column var
+					}
+				}
+			}
 		}
 
 		printTable();
