@@ -9,7 +9,6 @@ public class Simplex {
 	private boolean isMax;
 	private int rows;
 	private int cols;
-	private int x0Column;
 
 	public Simplex(double[][] table, boolean isMaximizingProblem) {
 		this.isMax = isMaximizingProblem;
@@ -54,18 +53,20 @@ public class Simplex {
 
 	public double solve() {
 		if (isTwoPhase) {
+			int x0Column = 0;
+
 			//copy target function without x0
-			double[] tmp = new double[cols - 1];
+			double[] tmp = new double[cols];
 			for (int i = 1; i < cols; i++) {
-				tmp[i - 1] = table[rows - 1][i];
+				tmp[i] = table[rows - 1][i];
 				table[rows - 1][i] = 0;
 			}
 			int pRow = findLowestC();
 			rotate(pRow, 0);
 			double tmpSolution = solvePhase();
-			printTable();
+			printTable(); //ok
 
-			//check if tmpSolution = 0; if so, gooooooooddd!
+			//TODO check if tmpSolution = 0; if so, gooooooooddd!
 
 			//if x0 is in a row, swap it to a column. It doesn't matter which column
 			for (int i = 0; i < rows; i++) {
@@ -75,37 +76,58 @@ public class Simplex {
 				}
 			}
 
-			//put in target function, remove x0
-			int tmpIndex = 0;
+			//copy in target function, if the x variable is still in a column
+			// and remove x0
 			for (int i = 0; i < cols; i++) {
 				if (this.columnVar[i] == 0) {
+					x0Column = i;
+
 					//set x0 to 0
-					this.x0Column = i;
 					for (int j = 0; j < rows; j++)
 						table[j][i] = 0;
-					//table[rows - 1][i] = 0;//maybe not needed?
 				} else {
-					table[rows - 1][i] = tmp[tmpIndex];
-					tmpIndex++;
-				}
-			}
-
-			//ersetzen
-			for (int i = 0; i < tmp.length; i++) {
-				if (i != x0Column) {
-					if (columnVar[i] < tmp.length - 1) {
-						//this is an x var, simply copy the content
-					} else {
-						//look for column var
+					//put in x1-xn. If variable is a y, don't do anything
+					int colIndex = this.columnVar[i];
+					if (colIndex < this.columnVar.length) {
+						table[rows - 1][colIndex] = tmp[colIndex];
 					}
 				}
 			}
+
+			printTable();
+			this.replaceTargetFunction(tmp, x0Column);
 		}
 
 		printTable();
 		double tmp = solvePhase();
 		printTable();
 		return isMax ? tmp : -tmp;
+	}
+
+	private final void replaceTargetFunction(double[] targetFunction, int x0Column) {
+		for (int i = 0; i < targetFunction.length; i++) {
+			if (i != x0Column) {
+				if (columnVar[i] >= targetFunction.length) {
+					int rowIndex = this.findXRowVarIndex(i + 1);
+					double originalTargetVal = targetFunction[i + 1];
+
+					//replace
+					for (int j = 0; j < this.cols; j++) {
+						double bla = table[rowIndex][j];
+						table[rows - 1][j] += originalTargetVal * table[rowIndex][j];
+					}
+				}
+			}
+
+		}
+	}
+
+	private final int findXRowVarIndex(int xVar) {
+		for (int i = 0; i < rows; i++) {
+			if (this.rowVar[i] == xVar)
+				return i;
+		}
+		return -1;
 	}
 
 	private final int findLowestC() {

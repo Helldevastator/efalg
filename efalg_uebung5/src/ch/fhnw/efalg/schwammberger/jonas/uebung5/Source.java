@@ -9,8 +9,8 @@ public class Source {
 
 	public static void main(String[] args) {
 		if (args.length == 0) {
-			testSimpleSimplex();
-			//testTwoPhaseSimplex();
+			//testSimpleSimplex();
+			testTwoPhaseSimplex();
 			//read("./LP_problems/BasicExample.csv");
 		} else {
 			//vogel test
