@@ -75,9 +75,9 @@ public class Simplex {
 		while ((pivotCol = findPCol()) >= 0) {
 			int pivotRow = findPRow(pivotCol);
 
-			//case pivotCol == -1, solution -> infinity
+			//pivotCol == -1, unbeschränkt, keine Lösung!
 			if (pivotRow < 0)
-				return Double.POSITIVE_INFINITY;
+				return Double.NaN;
 
 			rotate(pivotRow, pivotCol);
 			//TODO: Handle degeneration?
@@ -148,18 +148,20 @@ public class Simplex {
 		if (isTwoPhase) {
 			int x0Column = 0;
 
-			//copy target function without x0
-			double[] tmp = new double[cols];
+			//copy of target function
+			double[] functionCopy = new double[cols];
 			for (int i = 1; i < cols; i++) {
-				tmp[i] = table[rows - 1][i];
+				functionCopy[i] = table[rows - 1][i];
 				table[rows - 1][i] = 0;
 			}
 			int pRow = findLowestC();
 			rotate(pRow, 0);
-			double tmpSolution = solvePhase();
+			double phase1Solution = solvePhase();
 			printTable(); //ok
 
-			//TODO check if tmpSolution = 0; if so, gooooooooddd!
+			//check if phase1Solution = 0; if so, gooodd! Otherwise unsolvable
+			if (Double.compare(Math.abs(phase1Solution), 0) != 0)
+				return Double.NaN;
 
 			//if x0 is in a row, swap it to a column. It doesn't matter which column
 			for (int i = 0; i < rows; i++) {
@@ -182,13 +184,13 @@ public class Simplex {
 					//put in x1-xn. If variable is a y, don't do anything
 					int colIndex = this.columnVar[i];
 					if (colIndex < this.columnVar.length) {
-						table[rows - 1][colIndex] = tmp[colIndex];
+						table[rows - 1][colIndex] = functionCopy[colIndex];
 					}
 				}
 			}
 
 			printTable();
-			this.replaceTargetFunction(tmp, x0Column);
+			this.replaceTargetFunction(functionCopy, x0Column);
 		}
 
 		printTable();
@@ -198,19 +200,19 @@ public class Simplex {
 	}
 
 	private final void replaceTargetFunction(double[] targetFunction, int x0Column) {
-		int correction = 1;
+		int x0correction = 1;
 		for (int i = 0; i < targetFunction.length; i++) {
 			if (i != x0Column) {
 				if (columnVar[i] >= cols) {
-					int rowIndex = this.findXRowVarIndex(i + correction);
-					double originalTargetVal = targetFunction[i + correction];
+					int rowIndex = this.findXRowVarIndex(i + x0correction);
+					double originalTargetVal = targetFunction[i + x0correction];
 
 					//replace
 					for (int j = 0; j < this.cols; j++)
 						table[rows - 1][j] += originalTargetVal * table[rowIndex][j];
 				}
 			} else {
-				correction = 0;
+				x0correction = 0;
 			}
 
 		}
