@@ -10,9 +10,10 @@ public class Source {
 	public static void main(String[] args) {
 		if (args.length == 0) {
 			//testSimpleSimplex();
-			testTwoPhaseSimplex();
+			//testTwoPhaseSimplex();
 			//read("./LP_problems/BasicExample.csv");
-			read("./LP_problems/NichtNegativitaet_1.csv");
+			//read("./LP_problems/NichtNegativitaet_1.csv");
+			read("./LP_problems/NegSchlupf.csv");
 		} else {
 			//vogel test
 			//read(args[0]);

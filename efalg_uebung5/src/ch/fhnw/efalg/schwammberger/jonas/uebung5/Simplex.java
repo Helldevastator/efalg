@@ -80,7 +80,7 @@ public class Simplex {
 				return Double.POSITIVE_INFINITY;
 
 			rotate(pivotRow, pivotCol);
-			//TODO: handle special cases
+			//TODO: Handle degeneration?
 		}
 
 		return table[rows - 1][cols - 1];
