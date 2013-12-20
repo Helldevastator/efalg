@@ -12,6 +12,7 @@ public class Source {
 			//testSimpleSimplex();
 			testTwoPhaseSimplex();
 			//read("./LP_problems/BasicExample.csv");
+			read("./LP_problems/NichtNegativitaet_1.csv");
 		} else {
 			//vogel test
 			//read(args[0]);
@@ -70,9 +71,9 @@ public class Source {
 
 			isMax = readTargetFunction(in, table, rows, cols);
 			//read canbeNeg
-			canBeNeg = new boolean[cols];
+			canBeNeg = new boolean[cols - 1];
 			tmp = in.readLine().split(";");
-			for (int i = 0; i < cols; i++)
+			for (int i = 0; i < cols - 1; i++)
 				canBeNeg[i] = Boolean.parseBoolean(tmp[i]);
 
 			readTable(in, table, rows, cols);
@@ -82,13 +83,10 @@ public class Source {
 		}
 
 		if (table != null) {
-			try {
-				Simplex simple = new Simplex(table, isMax);
-				double solution = simple.solve();
-				System.out.println(solution);
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
+
+			Simplex simple = new Simplex(table, isMax);
+			double solution = simple.solve();
+			System.out.println(solution);
 		}
 	}
 

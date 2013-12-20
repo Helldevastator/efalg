@@ -144,6 +144,7 @@ public class Simplex {
 	}
 
 	public double solve() {
+		printTable();
 		if (isTwoPhase) {
 			int x0Column = 0;
 
@@ -197,16 +198,19 @@ public class Simplex {
 	}
 
 	private final void replaceTargetFunction(double[] targetFunction, int x0Column) {
+		int correction = 1;
 		for (int i = 0; i < targetFunction.length; i++) {
 			if (i != x0Column) {
 				if (columnVar[i] >= cols) {
-					int rowIndex = this.findXRowVarIndex(i + 1);
-					double originalTargetVal = targetFunction[i + 1];
+					int rowIndex = this.findXRowVarIndex(i + correction);
+					double originalTargetVal = targetFunction[i + correction];
 
 					//replace
 					for (int j = 0; j < this.cols; j++)
 						table[rows - 1][j] += originalTargetVal * table[rowIndex][j];
 				}
+			} else {
+				correction = 0;
 			}
 
 		}
