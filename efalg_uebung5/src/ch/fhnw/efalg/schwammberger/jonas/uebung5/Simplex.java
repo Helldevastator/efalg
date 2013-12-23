@@ -70,14 +70,14 @@ public class Simplex {
 		return out;
 	}
 
-	private final double solvePhase() {
+	private final double solvePhase() throws SimplexException {
 		int pivotCol = 0;
 		while ((pivotCol = findPCol()) >= 0) {
 			int pivotRow = findPRow(pivotCol);
 
-			//pivotCol == -1, unbeschränkt, keine Lösung!
+			//pivotRow == -1, unbeschränkt, keine Lösung!
 			if (pivotRow < 0)
-				return Double.NaN;
+				throw new SimplexException("Problem ist Unbeschränkt");
 
 			rotate(pivotRow, pivotCol);
 			//TODO: Handle degeneration?
@@ -143,7 +143,7 @@ public class Simplex {
 		}
 	}
 
-	public double solve() {
+	public double solve() throws SimplexException {
 		printTable();
 		if (isTwoPhase) {
 			int x0Column = 0;
@@ -161,7 +161,7 @@ public class Simplex {
 
 			//check if phase1Solution = 0; if so, gooodd! Otherwise unsolvable
 			if (Double.compare(Math.abs(phase1Solution), 0) != 0)
-				return Double.NaN;
+				throw new SimplexException("Problem ist nicht lösbar");
 
 			//if x0 is in a row, swap it to a column. It doesn't matter which column
 			for (int i = 0; i < rows; i++) {
@@ -189,6 +189,7 @@ public class Simplex {
 				}
 			}
 
+			//TODO: handle infinite solutions
 			printTable();
 			this.replaceTargetFunction(functionCopy, x0Column);
 		}

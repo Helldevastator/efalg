@@ -23,28 +23,36 @@ public class Source {
 
 	private static void testTwoPhaseSimplex() {
 		double[][] table = { { -1, -1, 18 }, { -1, 0, 11 }, { 0, -1, 10 }, { 1, 1, -9 }, { -1, -3, 229 } };
-		Simplex simple = new Simplex(table, false);
-		double solution = simple.solve();
+		try {
+			Simplex simple = new Simplex(table, false);
+			double solution = simple.solve();
 
-		if (solution == 191)
-			System.out.print("pass: ");
-		else
-			System.out.print("!!!!!!FALSE!!!!!! ");
+			if (solution == 191)
+				System.out.print("pass: ");
+			else
+				System.out.print("!!!!!!FALSE!!!!!! ");
 
-		System.out.println(solution);
+			System.out.println(solution);
+		} catch (SimplexException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	private static void testSimpleSimplex() {
 		double[][] table = { { -1, -1, 40 }, { -40, -120, 2400 }, { -7, -12, 312 }, { 100, 250, 0 } };
 		Simplex simple = new Simplex(table, true);
-		double solution = simple.solve();
+		try {
+			double solution = simple.solve();
 
-		if (solution == 5400)
-			System.out.print("pass: ");
-		else
-			System.out.print("!!!!!!FALSE!!!!!! ");
+			if (solution == 5400)
+				System.out.print("pass: ");
+			else
+				System.out.print("!!!!!!FALSE!!!!!! ");
 
-		System.out.println(solution);
+			System.out.println(solution);
+		} catch (SimplexException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	private static void read(String filePath) {
@@ -85,9 +93,14 @@ public class Source {
 
 		if (table != null) {
 
-			Simplex simple = new Simplex(table, isMax);
-			double solution = simple.solve();
-			System.out.println(solution);
+			try {
+				Simplex simple = new Simplex(table, isMax);
+
+				double solution = simple.solve();
+				System.out.println(solution);
+			} catch (SimplexException e) {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 
