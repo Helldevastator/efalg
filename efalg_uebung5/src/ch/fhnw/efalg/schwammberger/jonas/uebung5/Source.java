@@ -12,11 +12,12 @@ public class Source {
 			//testSimpleSimplex();
 			//testTwoPhaseSimplex();
 			//read("./LP_problems/BasicExample.csv");
-			//read("./LP_problems/NichtNegativitaet_1.csv");
-			read("./LP_problems/NegSchlupf.csv");
+			read("./LP_problems/NichtNegativitaet_2.csv");
+			//read("./LP_problems/NegSchlupf.csv");
+			//read("./LP_problems/ZweiSaefte.csv");
 		} else {
 			//vogel test
-			//read(args[0]);
+			read(args[0]);
 		}
 
 	}
@@ -82,10 +83,17 @@ public class Source {
 			//read canbeNeg
 			canBeNeg = new boolean[cols - 1];
 			tmp = in.readLine().split(";");
-			for (int i = 0; i < cols - 1; i++)
-				canBeNeg[i] = Boolean.parseBoolean(tmp[i]);
+			boolean onlyPositive = true;
+			for (int i = 0; i < cols - 1; i++) {
+				boolean b = Boolean.parseBoolean(tmp[i]);
+				canBeNeg[i] = b;
+				onlyPositive = onlyPositive & b;
+			}
 
 			readTable(in, table, rows, cols);
+
+			if (!onlyPositive)
+				handleNegativity(table, canBeNeg, rows, cols);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -93,13 +101,16 @@ public class Source {
 
 		if (table != null) {
 
+			Simplex simple = new Simplex(table, isMax);
 			try {
-				Simplex simple = new Simplex(table, isMax);
-
+				simple.printTable();
 				double solution = simple.solve();
+				simple.printTable();
 				System.out.println(solution);
 			} catch (SimplexException e) {
+				simple.printTable();
 				System.out.println(e.getMessage());
+
 			}
 		}
 	}
@@ -116,6 +127,7 @@ public class Source {
 				out++;
 
 		return out;
+
 	}
 
 	private static boolean readTargetFunction(BufferedReader in, double[][] table, int rows, int cols) throws IOException {
@@ -153,4 +165,25 @@ public class Source {
 		}
 	}
 
+	private static void handleNegativity(double[][] table, boolean[] canBeNeg, int rows, int cols) {
+		double[] maxima = new double[canBeNeg.length];
+		for (int i = 0; i < canBeNeg.length; i++) {
+			if (!canBeNeg[i]) {
+				for (int j = 0; j < rows - 1; j++) {
+					double current = Math.abs(table[j][cols - 1] / table[j][i]);
+					if (!Double.isInfinite(current) && maxima[i] < current)
+						maxima[i] = current;
+				}
+
+			}
+		}
+
+		for (int i = 0; i < canBeNeg.length; i++) {
+			if (!canBeNeg[i]) {
+				for (int j = 0; j < rows - 1; j++) {
+					table[j][cols - 1] += Math.abs(table[j][i] * maxima[i]);
+				}
+			}
+		}
+	}
 }

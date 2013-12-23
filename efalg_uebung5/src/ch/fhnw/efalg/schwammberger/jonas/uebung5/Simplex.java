@@ -144,7 +144,6 @@ public class Simplex {
 	}
 
 	public double solve() throws SimplexException {
-		printTable();
 		if (isTwoPhase) {
 			int x0Column = 0;
 
@@ -157,7 +156,6 @@ public class Simplex {
 			int pRow = findLowestC();
 			rotate(pRow, 0);
 			double phase1Solution = solvePhase();
-			printTable(); //ok
 
 			//check if phase1Solution = 0; if so, gooodd! Otherwise unsolvable
 			if (Double.compare(Math.abs(phase1Solution), 0) != 0)
@@ -189,14 +187,11 @@ public class Simplex {
 				}
 			}
 
-			//TODO: handle infinite solutions
-			printTable();
 			this.replaceTargetFunction(functionCopy, x0Column);
 		}
 
-		printTable();
 		double tmp = solvePhase();
-		printTable();
+		//TODO: handle infinite solutions
 		return isMax ? tmp : -tmp;
 	}
 
