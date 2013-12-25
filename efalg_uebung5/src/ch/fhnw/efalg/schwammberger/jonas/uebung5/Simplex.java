@@ -2,6 +2,11 @@ package ch.fhnw.efalg.schwammberger.jonas.uebung5;
 
 public class Simplex {
 	private double[][] table; //row, col
+	private String bla;
+
+	public String getBla() {
+		return bla;
+	}
 
 	private int[] columnVar; //helper variable is 0 [val(xo) = 0]
 	private int[] rowVar;
@@ -11,6 +16,7 @@ public class Simplex {
 	private int cols;
 
 	public Simplex(double[][] table, boolean isMaximizingProblem) {
+		this.bla = "";
 		this.isMax = isMaximizingProblem;
 		this.isTwoPhase = hasNegC(table);
 		this.rows = table.length;
@@ -144,9 +150,9 @@ public class Simplex {
 	}
 
 	public double solve() throws SimplexException {
-		if (isTwoPhase) {
-			int x0Column = 0;
+		int x0Column = 0;
 
+		if (isTwoPhase) {
 			//copy of target function
 			double[] functionCopy = new double[cols];
 			for (int i = 1; i < cols; i++) {
@@ -191,7 +197,15 @@ public class Simplex {
 		}
 
 		double tmp = solvePhase();
-		//TODO: handle infinite solutions
+		//handle infinite solutions
+		for (int i = 0; i < cols; i++) {
+			if (isTwoPhase) {
+
+			} else {
+				if (table[rows - 1][i] == 0)
+					bla = "Infinite Solutions";
+			}
+		}
 		return isMax ? tmp : -tmp;
 	}
 

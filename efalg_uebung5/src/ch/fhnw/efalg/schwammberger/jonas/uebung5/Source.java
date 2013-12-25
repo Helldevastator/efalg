@@ -11,6 +11,7 @@ public class Source {
 		if (args.length == 0) {
 			//testSimpleSimplex();
 			//testTwoPhaseSimplex();
+			//read("./LP_problems/InfiniteSolutions.csv");
 			//read("./LP_problems/BasicExample.csv");
 			read("./LP_problems/NichtNegativitaet_2.csv");
 			//read("./LP_problems/NegSchlupf.csv");
@@ -85,7 +86,7 @@ public class Source {
 			tmp = in.readLine().split(";");
 			boolean onlyPositive = true;
 			for (int i = 0; i < cols - 1; i++) {
-				boolean b = Boolean.parseBoolean(tmp[i]);
+				boolean b = "true".equals(tmp[i].trim());
 				canBeNeg[i] = b;
 				onlyPositive = onlyPositive & b;
 			}
@@ -106,7 +107,10 @@ public class Source {
 				simple.printTable();
 				double solution = simple.solve();
 				simple.printTable();
+
 				System.out.println(solution);
+				System.out.println(simple.getBla());
+				//TODO: more bla for non negativity
 			} catch (SimplexException e) {
 				simple.printTable();
 				System.out.println(e.getMessage());
@@ -149,9 +153,11 @@ public class Source {
 			if (tmp[0].startsWith("=")) {
 				for (int j = 0; j < cols; j++) {
 					double input = Double.parseDouble(tmp[j + 1]);
-					table[i][j] = input;
-					table[i + 1][j] = -input; //missing >= , *(-1)??
+					table[i][j] = -input;
+					table[i + 1][j] = input; //missing >= , *(-1)??
 				}
+				table[i][cols - 1] = -table[i][cols - 1];
+				table[i + 1][cols - 1] = -table[i + 1][cols - 1];
 				i++;
 
 			} else {
@@ -159,13 +165,15 @@ public class Source {
 
 				for (int j = 0; j < cols; j++) {
 					double input = Double.parseDouble(tmp[j + 1]);
-					table[i][j] = isGreater ? input : -input;
+					table[i][j] = isGreater ? -input : input;
 				}
+				table[i][cols - 1] = -table[i][cols - 1];
 			}
 		}
 	}
 
 	private static void handleNegativity(double[][] table, boolean[] canBeNeg, int rows, int cols) {
+		//TODO: false
 		double[] maxima = new double[canBeNeg.length];
 		for (int i = 0; i < canBeNeg.length; i++) {
 			if (!canBeNeg[i]) {
