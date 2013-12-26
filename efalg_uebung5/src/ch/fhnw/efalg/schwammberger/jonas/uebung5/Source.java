@@ -60,15 +60,16 @@ public class Source {
 	private static void read(String filePath) {
 		Scanner s = null;
 
+		double[] maxima = null;
 		boolean isMax = false;
 		double[][] table = null;
+		boolean[] onlyPositive = null;
 
 		BufferedReader in;
 
 		try {
 			int cols;
 			int rows;
-			boolean[] canBeNeg;
 
 			in = new BufferedReader(new FileReader(filePath));
 			int correction = getCorrection(in);
@@ -82,19 +83,19 @@ public class Source {
 
 			isMax = readTargetFunction(in, table, rows, cols);
 			//read canbeNeg
-			canBeNeg = new boolean[cols - 1];
+			onlyPositive = new boolean[cols - 1];
 			tmp = in.readLine().split(";");
-			boolean onlyPositive = true;
+			boolean nonNegative = true;
 			for (int i = 0; i < cols - 1; i++) {
 				boolean b = "true".equals(tmp[i].trim());
-				canBeNeg[i] = b;
-				onlyPositive = onlyPositive & b;
+				onlyPositive[i] = b;
+				nonNegative = nonNegative & b;
 			}
 
 			readTable(in, table, rows, cols);
 
-			if (!onlyPositive)
-				handleNegativity(table, canBeNeg, rows, cols);
+			if (!nonNegative)
+				maxima = handleNegativity(table, onlyPositive, rows, cols);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -104,13 +105,25 @@ public class Source {
 
 			Simplex simple = new Simplex(table, isMax);
 			try {
-				simple.printTable();
+				//simple.printTable();
 				double solution = simple.solve();
-				simple.printTable();
+				//simple.printTable();
 
-				System.out.println(solution);
-				System.out.println(simple.getBla());
-				//TODO: more bla for non negativity
+				//more bla for non negativity
+				if (maxima != null) {
+					double[] vars = simple.getSolutionPerVar();
+					for (int i = 0; i < onlyPositive.length; i++) {
+						if (!onlyPositive[i]) {
+							vars[i] = vars[i] - maxima[i];
+						}
+					}
+
+					System.out.println(simple.insertInTargetFunction(vars));
+					System.out.println(simple.getBla());
+				} else {
+					System.out.println(solution);
+					System.out.println(simple.getBla());
+				}
 			} catch (SimplexException e) {
 				simple.printTable();
 				System.out.println(e.getMessage());
@@ -172,7 +185,7 @@ public class Source {
 		}
 	}
 
-	private static void handleNegativity(double[][] table, boolean[] canBeNeg, int rows, int cols) {
+	private static double[] handleNegativity(double[][] table, boolean[] canBeNeg, int rows, int cols) {
 		//TODO: false
 		double[] maxima = new double[canBeNeg.length];
 		for (int i = 0; i < canBeNeg.length; i++) {
@@ -189,9 +202,11 @@ public class Source {
 		for (int i = 0; i < canBeNeg.length; i++) {
 			if (!canBeNeg[i]) {
 				for (int j = 0; j < rows - 1; j++) {
-					table[j][cols - 1] += Math.abs(table[j][i] * maxima[i]);
+					table[j][cols - 1] += table[j][i] * -maxima[i];
 				}
 			}
 		}
+
+		return maxima;
 	}
 }

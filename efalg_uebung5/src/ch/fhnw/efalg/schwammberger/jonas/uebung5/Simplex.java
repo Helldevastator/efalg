@@ -2,12 +2,8 @@ package ch.fhnw.efalg.schwammberger.jonas.uebung5;
 
 public class Simplex {
 	private double[][] table; //row, col
+	private double[] targetFunction;
 	private String bla;
-
-	public String getBla() {
-		return bla;
-	}
-
 	private int[] columnVar; //helper variable is 0 [val(xo) = 0]
 	private int[] rowVar;
 	private boolean isTwoPhase;
@@ -33,16 +29,21 @@ public class Simplex {
 			}
 		}
 
+		//copy target function without helper var
+		this.targetFunction = new double[table[0].length - 1];
+		for (int i = 0; i < targetFunction.length; i++)
+			this.targetFunction[i] = table[rows - 1][i];
+
 		if (isTwoPhase)
 			this.table[rows - 1][0] = -1;
 
 		this.columnVar = new int[cols];
 		for (int i = 0; i < cols; i++)
-			this.columnVar[i] = i;
+			this.columnVar[i] = isTwoPhase ? i : i + 1;
 
 		this.rowVar = new int[rows];
 		for (int i = 0; i < rows; i++)
-			this.rowVar[i] = i + cols;
+			this.rowVar[i] = i + cols + 1;
 
 		if (!isMax)
 			this.invertTargetFunction();
@@ -199,8 +200,9 @@ public class Simplex {
 		double tmp = solvePhase();
 		//handle infinite solutions
 		for (int i = 0; i < cols; i++) {
-			if (isTwoPhase) {
-
+			if (isTwoPhase && i != x0Column) {
+				if (table[rows - 1][i] == 0)
+					bla = "Infinite Solutions";
 			} else {
 				if (table[rows - 1][i] == 0)
 					bla = "Infinite Solutions";
@@ -246,6 +248,33 @@ public class Simplex {
 		}
 
 		System.out.println();
+	}
+
+	public String getBla() {
+		return bla;
+	}
+
+	public double[] getSolutionPerVar() {
+		double[] answer = new double[targetFunction.length];
+		/*
+		 * for (int i = 0; i < cols; i++) { if (this.columnVar[i] <
+		 * targetFunction.length && this.columnVar[i] > 0)
+		 * answer[this.columnVar[i] - 1] = this.table[rows - 1][i]; }
+		 */
+
+		for (int i = 0; i < rows; i++) {
+			if (this.rowVar[i] < targetFunction.length && this.rowVar[i] > 0)
+				answer[this.rowVar[i] - 1] = this.table[i][cols - 1];
+		}
+		return answer;
+	}
+
+	public double insertInTargetFunction(double[] vars) {
+		double answer = 0;
+		for (int i = 0; i < targetFunction.length; i++) {
+			answer += this.targetFunction[i] * vars[i];
+		}
+		return answer;
 	}
 
 }
