@@ -13,6 +13,7 @@ public class Source {
 			//testTwoPhaseSimplex();
 			//read("./LP_problems/InfiniteSolutions.csv");
 			//read("./LP_problems/BasicExample.csv");
+			//read("./LP_problems/NichtNegativitaet_1.csv");
 			read("./LP_problems/NichtNegativitaet_2.csv");
 			//read("./LP_problems/NegSchlupf.csv");
 			//read("./LP_problems/ZweiSaefte.csv");
@@ -125,7 +126,6 @@ public class Source {
 					System.out.println(simple.getBla());
 				}
 			} catch (SimplexException e) {
-				simple.printTable();
 				System.out.println(e.getMessage());
 
 			}
