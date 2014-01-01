@@ -109,22 +109,25 @@ public class Source {
 				//simple.printTable();
 				double solution = simple.solve();
 				//simple.printTable();
+				double[] vars = simple.getSolutionPerVar();
 
 				//more bla for non negativity
 				if (maxima != null) {
-					double[] vars = simple.getSolutionPerVar();
 					for (int i = 0; i < onlyPositive.length; i++) {
 						if (!onlyPositive[i]) {
 							vars[i] = vars[i] - maxima[i];
 						}
 					}
 
-					System.out.println(simple.insertInTargetFunction(vars));
-					System.out.println(simple.getBla());
-				} else {
-					System.out.println(solution);
-					System.out.println(simple.getBla());
+					solution = simple.insertInTargetFunction(vars);
 				}
+
+				for (int i = 0; i < vars.length; i++)
+					System.out.print(vars[i] + " ");
+				System.out.print(solution);
+				System.out.println();
+				System.out.println(simple.getBla());
+
 			} catch (SimplexException e) {
 				System.out.println(e.getMessage());
 
